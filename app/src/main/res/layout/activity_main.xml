@@ -56,4 +56,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:mipmap/sym_def_app_icon" />
 
+    <Button
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        tools:layout_editor_absoluteX="164dp"
+        tools:layout_editor_absoluteY="618dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

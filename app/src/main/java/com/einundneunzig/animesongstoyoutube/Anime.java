@@ -2,14 +2,15 @@ package com.einundneunzig.animesongstoyoutube;
 
 import android.net.Uri;
 
+import java.net.URL;
 import java.util.List;
 
 public class Anime {
     private String title;
     private int id;
-    private Uri photoUrl;
+    private URL photoUrl;
 
-    public Anime(int id, String title, Uri photoUrl){
+    public Anime(int id, String title, URL photoUrl){
         this.id = id;
         this.title = title;
         this.photoUrl = photoUrl;
@@ -31,7 +32,7 @@ public class Anime {
         return id;
     }
 
-    public Uri getPhotoUrl() {
+    public URL getPhotoUrl() {
         return photoUrl;
     }
 }

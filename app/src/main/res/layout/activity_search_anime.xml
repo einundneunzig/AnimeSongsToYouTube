@@ -17,13 +17,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:imeOptions="actionSearch"
+            android:inputType="textPersonName" />
 
         <ScrollView
-            android:id="@+id/animeList"
+            android:id="@+id/animeListScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Hallol"/>
+            android:contentDescription="Hallol">
+
+            <LinearLayout
+                android:id="@+id/animeList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+        </ScrollView>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

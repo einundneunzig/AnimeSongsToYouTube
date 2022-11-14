@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         account = GoogleSignIn.getLastSignedInAccount(this);
 
         updateUI(account);
-
         findViewById(R.id.buttonSignOut).setOnClickListener(this);
+        findViewById(R.id.search).setOnClickListener(this);
     }
 
     private void updateUI(GoogleSignInAccount account) {
@@ -119,6 +119,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.buttonSignOut:
                 signOut();
+                break;
+            case R.id.search:
+                Intent intent = new Intent(this, SearchAnimeActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -189,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
+            System.out.println(account.getDisplayName());
             updateUI(account);
             callYoutubeAPI();
 
