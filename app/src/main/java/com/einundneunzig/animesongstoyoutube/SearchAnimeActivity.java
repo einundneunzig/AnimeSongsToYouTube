@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -33,7 +35,7 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchAnimeActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
+public class SearchAnimeActivity extends AppCompatActivity implements TextView.OnEditorActionListener, View.OnClickListener {
 
     private LinearLayout animeList;
 
@@ -117,27 +119,10 @@ public class SearchAnimeActivity extends AppCompatActivity implements TextView.O
             layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
             layout.setOrientation(LinearLayout.HORIZONTAL);
 
-            final Bitmap[] bitmap = {null};
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        bitmap[0] = BitmapFactory.decodeStream(anime.getPhotoUrl().openStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            t.start();
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             ImageView image = new ImageView(this);
             image.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT, 3));
-            image.setImageBitmap(bitmap[0]);
+            image.setImageBitmap(anime.getImage());
 
             TextView text = new TextView(this);
             text.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT, 1));
@@ -146,6 +131,8 @@ public class SearchAnimeActivity extends AppCompatActivity implements TextView.O
             layout.addView(image);
             layout.addView(text);
 
+            layout.setTag(anime);
+            layout.setOnClickListener(this);
             animeList.addView(layout);
         }
     }
@@ -160,5 +147,18 @@ public class SearchAnimeActivity extends AppCompatActivity implements TextView.O
             }
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view instanceof LinearLayout){
+            LinearLayout animeLayout = (LinearLayout) view;
+            if(((LinearLayout) view).getOrientation() == LinearLayout.HORIZONTAL){
+                Anime anime = (Anime)animeLayout.getTag();
+                Intent intent = new Intent(this, AnimeDetailsActivity.class);
+                intent.putExtra("anime", anime);
+                startActivity(intent);
+            }
+        }
     }
 }
