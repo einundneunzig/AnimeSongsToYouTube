@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/theo/AndroidStudioProjects/AnimeSongsToYouTube/app/src/main/res/layout/activity_anime_details.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/theo/AndroidStudioProjects/AnimeSongsToYouTube/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/theo/AndroidStudioProjects/AnimeSongsToYouTube/app/src/main/res/layout/activity_search_anime.xml" value="0.14666666666666667" />
+        <entry key="..\:/Workspace Android Studio/AnimeSongsToYouTube/app/src/main/res/layout/activity_anime_details.xml" value="0.36666666666666664" />
+        <entry key="..\:/Workspace Android Studio/AnimeSongsToYouTube/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Workspace Android Studio/AnimeSongsToYouTube/app/src/main/res/layout/activity_search_anime.xml" value="0.36666666666666664" />
+        <entry key="..\:/Workspace Android Studio/AnimeSongsToYouTube/app/src/main/res/layout/confirm_popup.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
