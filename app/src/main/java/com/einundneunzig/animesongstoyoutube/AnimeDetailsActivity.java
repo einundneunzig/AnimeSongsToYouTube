@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -46,6 +47,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -144,6 +146,10 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
             HashMap<String, String> endingThemes = getThemes(
                     new URL("https://api.myanimelist.net/v2/anime/" + anime.getId() + "?fields=ending_themes{text}"));
 
+            CheckBox checkBox1 = findViewById(R.id.checkBoxAllSongs);
+            if(checkBox1.isChecked()){
+                getRelatedAnime(new URL("https://api.myanimelist.net/v2/anime/" + anime.getId() + "?fields=related_anime"));
+            }
 
             GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, Arrays.asList(YouTubeScopes.YOUTUBE_FORCE_SSL));
             credential.setSelectedAccount(account.getAccount());
@@ -250,6 +256,17 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    private List<Integer> getRelatedAnime(URL url)throws IOException{
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("X-MAL-CLIENT-ID", "3f5dca7ffc3b2dbae618687b2778a04c");
+        con.getInputStream();
+        BufferedReader response = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+        String line = response.readLine();
+        System.out.println(line);
+        return null;
+    }
     private HashMap<String, String> getThemes(URL url) throws IOException {
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
