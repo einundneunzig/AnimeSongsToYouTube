@@ -3,6 +3,7 @@ package com.einundneunzig.animesongstoyoutube;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,7 +26,7 @@ public abstract class MyAnimeListManager {
         return response.readLine();
     }
 
-    public static List<Integer> getRelatedAnime(String animeId)throws IOException {
+    public static List<Integer> getRelatedAnime(int animeId)throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("X-MAL-CLIENT-ID", "3f5dca7ffc3b2dbae618687b2778a04c");
@@ -36,7 +37,7 @@ public abstract class MyAnimeListManager {
         System.out.println(line);
         return null;
     }
-    public static HashMap<String, String> getThemes(String animeId) throws IOException {
+    public static HashMap<String, String> getThemes(int animeId) throws IOException {
 
         HashMap<String, String> themes = new HashMap<>();
         themes.putAll(getOpeningThemes(animeId));
@@ -45,32 +46,46 @@ public abstract class MyAnimeListManager {
         return themes;
     }
 
-    public static Map<String, String> getEndingThemes(String animeId) {
+    public static Map<String, String> getEndingThemes(int animeId) throws IOException{
+
+        URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=ending_themes{text}");
+
+        String response = getAPIResponse(url);
+
+        HashMap<String, String> endingThemes = filterThemesFromResponse(response);
+
+        return endingThemes;
     }
 
-    public static Map<String, String> getOpeningThemes(String animeId) throws IOException {
+    public static Map<String, String> getOpeningThemes(int animeId) throws IOException {
 
-
-        HashMap<String, String> openingThemes = new HashMap<>();
         URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=opening_themes{text}");
 
         String response = getAPIResponse(url);
 
-        int anfang = line.indexOf("\"text\":");
+        HashMap<String, String> openingThemes = filterThemesFromResponse(response);
+
+        return openingThemes;
+    }
+
+    private static HashMap<String, String> filterThemesFromResponse(String response) {
+
+        HashMap<String, String> themes = new HashMap<>();
+
+        int anfang = response.indexOf("\"text\":");
         int ende = 0;
 
-        ArrayList<String> themes = new ArrayList<>();
-
+        ArrayList<String> themesText = new ArrayList<>();
         while (anfang != -1) {
             anfang += 8;                //remove "text":"
-            anfang = line.indexOf("\"", anfang) + 1;
+            anfang = response.indexOf("\"", anfang) + 1;
 
-            ende = line.indexOf("}", anfang) - 1;
-            themes.add(line.substring(anfang, ende));
-            anfang = line.indexOf("\"text\":", ende);
+            ende = response.indexOf("}", anfang) - 1;
+            themesText.add(response.substring(anfang, ende));
+            anfang = response.indexOf("\"text\":", ende);
         }
 
-        for (String s : themes) {
+        for (String s : themesText) {
             int i = s.indexOf("(");
             if(!(i<s.indexOf("\""))){
                 i = s.indexOf("\"");
@@ -78,9 +93,9 @@ public abstract class MyAnimeListManager {
             int end = s.indexOf("(", i + 1);
             if (end != -1) end--;
             else end = s.length();
-            openingThemes.put(s.substring(0, i - 1).replaceAll("\\\\u....", ""), s.substring(s.indexOf("\"") + 5, end).replaceAll("\\\\u....", ""));
+            themes.put(s.substring(0, i - 1).replaceAll("\\\\u....", ""), s.substring(s.indexOf("\"") + 5, end).replaceAll("\\\\u....", ""));
         }
 
-        return openingThemes;
+        return themes;
     }
 }

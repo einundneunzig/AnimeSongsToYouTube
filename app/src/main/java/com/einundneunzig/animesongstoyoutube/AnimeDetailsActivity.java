@@ -1,5 +1,6 @@
 package com.einundneunzig.animesongstoyoutube;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,19 +22,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
-import com.google.api.services.youtube.model.SearchListResponse;
-import com.google.api.services.youtube.model.SearchResult;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -42,7 +34,6 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
     private PopupWindow popupWindow;
-    private YouTube mService;
     private final int RC_SIGN_IN = 1001;
 
     @Override
@@ -98,7 +89,7 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void showConfirmPopup(GoogleSignInAccount account) {
+    private void showConfirmPopup(@NonNull GoogleSignInAccount account) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.confirm_popup, null);
         popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -126,27 +117,18 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     private void saveThemesToPlaylist() {
 
         try {
-            HashMap<String, String> openingThemes = getThemes(
-                    new URL("https://api.myanimelist.net/v2/anime/" + anime.getId() + "?fields=opening_themes{text}"));
-
-            HashMap<String, String> endingThemes = getThemes(
-                    new URL("https://api.myanimelist.net/v2/anime/" + anime.getId() + "?fields=ending_themes{text}"));
+            HashMap<String, String> themes = MyAnimeListManager.getThemes(anime.getId());
 
             CheckBox checkBox1 = findViewById(R.id.checkBoxAllSongs);
             if(checkBox1.isChecked()){
-                getRelatedAnime(new URL("https://api.myanimelist.net/v2/anime/" + anime.getId() + "?fields=related_anime"));
+                MyAnimeListManager.getRelatedAnime(anime.getId());
             }
 
             YoutubeManager.setAccount(account, this);
 
             String playlistId = YoutubeManager.createPlaylist(anime.getTitle()+" OSTs", "private");
 
-            for(Map.Entry<String, String> e: openingThemes.entrySet()) {
-                String videoId = YoutubeManager.searchYouTubeForSong(e.getKey() + " " + e.getValue());
-                YoutubeManager.addVideoToPlaylist(playlistId, videoId);
-            }
-
-            for(Map.Entry<String, String> e: endingThemes.entrySet()) {
+            for(Map.Entry<String, String> e: themes.entrySet()) {
                 String videoId = YoutubeManager.searchYouTubeForSong(e.getKey() + " " + e.getValue());
                 YoutubeManager.addVideoToPlaylist(playlistId, videoId);
             }

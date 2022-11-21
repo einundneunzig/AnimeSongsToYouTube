@@ -2,6 +2,8 @@ package com.einundneunzig.animesongstoyoutube;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -27,7 +29,7 @@ public abstract class YoutubeManager {
 
     private static YouTube mService;
 
-    public static void setAccount(GoogleSignInAccount account, Context context){
+    public static void setAccount(@NonNull GoogleSignInAccount account, Context context){
 
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(YouTubeScopes.YOUTUBE_FORCE_SSL));
         credential.setSelectedAccount(account.getAccount());
@@ -41,13 +43,13 @@ public abstract class YoutubeManager {
                 .build();
     }
 
-    public static Playlist findPlaylistById(String id){
+    public static Playlist findPlaylistById(@NonNull String id){
         return null;
     }
     public static List<Playlist> getAllPlaylistsFromUser(){
         return null;
     }
-    public static void addVideoToPlaylist(String playlistId, String videoId){
+    public static void addVideoToPlaylist(@NonNull String playlistId, @NonNull String videoId){
 
         PlaylistItem item = new PlaylistItem();
         PlaylistItemSnippet snippet = new PlaylistItemSnippet();
