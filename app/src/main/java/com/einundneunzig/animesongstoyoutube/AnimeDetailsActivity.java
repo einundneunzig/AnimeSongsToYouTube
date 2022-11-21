@@ -96,8 +96,7 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         popupWindow.showAtLocation(findViewById(R.id.convertButton), Gravity.CENTER, 0, 0);
         ((TextView)popupView.findViewById(R.id.doYouWantText)).setText("Möchtest du mit dem YouTube Konto \"" + account.getDisplayName() + "\" fortfahren?");
         popupView.findViewById(R.id.buttonYes).setOnClickListener(this);
-        popupView.findViewById(R.id.buttonNo).setOnClickListener(this);
-
+        popupView.findViewById(R.id.buttonNo).setOnClickListener(this)
     }
 
     private void signIn() {
