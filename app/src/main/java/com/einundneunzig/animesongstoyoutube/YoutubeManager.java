@@ -108,19 +108,22 @@ public abstract class YoutubeManager {
         return response[0].getId();
     }
 
-    public static String searchYouTubeForSong(String search){
+    public static String searchYouTubeForSong(String title, String singer){
         final SearchResult[] searchResult = new SearchResult[1];
+
 
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 SearchListResponse searchListResponse = null;
                 try {
-                    searchListResponse = mService.search().list("snippet").setQ(search).setType("video").setVideoCategoryId("10").execute();
+                    searchListResponse = mService.search().list("snippet").setQ(title + " " + singer).setType("video").setVideoCategoryId("10").execute();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                searchResult[0] = searchListResponse.getItems().get(0);
+                if(searchListResponse != null || searchListResponse.getItems().size() != 0){
+                    searchResult[0] = searchListResponse.getItems().get(0);
+                }
             }
         });
         t.start();
@@ -130,6 +133,9 @@ public abstract class YoutubeManager {
             e.printStackTrace();
         }
 
+        if(searchResult[0]==null) {
+            return searchYouTubeForSong(title, "");
+        }
         return searchResult[0].getId().getVideoId();
     }
 }

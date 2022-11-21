@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,13 +31,16 @@ public abstract class MyAnimeListManager {
 
     public static List<Integer> getRelatedAnime(int animeId)throws IOException {
 
-        List<Integer> relatedAnime = getRelatedAnimeRec(animeId, new ArrayList<>());
+        List<Integer> relatedAnime = new ArrayList<>();
+        relatedAnime.add(animeId);
+        getRelatedAnimeRec(animeId, relatedAnime);
         return relatedAnime;
     }
 
-    private static List<Integer> getRelatedAnimeRec(int animeId, List<Integer> relatedAnime)throws IOException{
+    private static void getRelatedAnimeRec(int animeId, List<Integer> relatedAnime)throws IOException{
 
         int size = relatedAnime.size();
+        System.out.println(size);
 
         URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=related_anime");
         String response = getAPIResponse(url);
@@ -43,18 +48,18 @@ public abstract class MyAnimeListManager {
         int position = response.indexOf("\"id\":", 6);  //Skip first id (Id of current anime)
 
         while(position!=-1){
-            int id2 = Integer.parseInt(response.substring(position+5, response.indexOf(",", position)));
-            if(!relatedAnime.contains(id2)){
-                relatedAnime.add(id2);
+            int id = Integer.parseInt(response.substring(position+5, response.indexOf(",", position)));
+            if(!relatedAnime.contains(id)){
+                relatedAnime.add(id);
             }
             position = response.indexOf("\"id\":", position+1);
         }
 
         for (int i = size; i<relatedAnime.size(); i++) {
-            relatedAnime.addAll(getRelatedAnimeRec(relatedAnime.get(i), relatedAnime));
+            System.out.println(i);
+            getRelatedAnimeRec(relatedAnime.get(i), relatedAnime);
         }
 
-        return relatedAnime;
     }
 
     public static HashMap<String, String> getThemes(int animeId) throws IOException {
@@ -107,7 +112,7 @@ public abstract class MyAnimeListManager {
 
         for (String s : themesText) {
             int i = s.indexOf("(");
-            if(!(i<s.indexOf("\""))){
+            if((!(i<s.indexOf("\""))) || i==-1){
                 i = s.indexOf("\"");
             }
             int end = s.indexOf("(", i + 1);

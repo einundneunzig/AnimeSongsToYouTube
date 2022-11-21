@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,11 +74,12 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.buttonYes:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        saveThemesToPlaylist();
-                    }
+                ProgressBar progressBar = findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setIndeterminate(true);
+                new Thread(() -> {
+                    saveThemesToPlaylist();
+                    progressBar.setVisibility(View.INVISIBLE);
                 }).start();
                 popupWindow.dismiss();
                 break;
@@ -118,6 +122,7 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
 
     private void saveThemesToPlaylist() {
 
+        ProgressBar progressBar = findViewById(R.id.progressBar);
         try {
             HashMap<String, String> themes = MyAnimeListManager.getThemes(anime.getId());
 
@@ -128,18 +133,24 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
                     themes.putAll(MyAnimeListManager.getThemes(id));
                 }
             }
+            progressBar.setMax(themes.size());
+            progressBar.setIndeterminate(false);
 
             YoutubeManager.setAccount(account, this);
 
             String playlistId = YoutubeManager.createPlaylist(anime.getTitle()+" OSTs", "private");
 
+            progressBar.setProgress(1);
             for(Map.Entry<String, String> e: themes.entrySet()) {
-                String videoId = YoutubeManager.searchYouTubeForSong(e.getKey() + " " + e.getValue());
+                String videoId = YoutubeManager.searchYouTubeForSong(e.getKey(), e.getValue());
                 YoutubeManager.addVideoToPlaylist(playlistId, videoId);
+                progressBar.setProgress(progressBar.getProgress()+1);
             }
 
         }catch(IOException e){
             e.printStackTrace();
         }
+
+        Toast.makeText(this, "All Songs added.", Toast.LENGTH_LONG).show();
     }
 }
