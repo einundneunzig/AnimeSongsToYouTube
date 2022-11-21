@@ -256,6 +256,34 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    private void createNewPlaylist(String title, String privacyStatus) {
+
+        Playlist p = new Playlist();
+        PlaylistSnippet snippet = new PlaylistSnippet();
+        snippet.setTitle(title);
+        PlaylistStatus status = new PlaylistStatus();
+        status.setPrivacyStatus(privacyStatus);
+        p.setStatus(status);
+        p.setSnippet(snippet);
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mService.playlists().insert("snippet", p).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private List<Integer> getRelatedAnime(URL url)throws IOException{
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
