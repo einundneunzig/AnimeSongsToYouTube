@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -63,6 +62,26 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.details_activity_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+
+            default:
+                // Wenn wir hier ankommen, wurde eine unbekannt Aktion erfasst.
+                // Daher erfolgt der Aufruf der Super-Klasse, die sich darum kümmert.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.convertButton:
@@ -80,6 +99,7 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
                 new Thread(() -> {
                     saveThemesToPlaylist();
                     progressBar.setVisibility(View.INVISIBLE);
+                    runOnUiThread(()-> Toast.makeText(AnimeDetailsActivity.this, "All Songs added.", Toast.LENGTH_LONG).show());
                 }).start();
                 popupWindow.dismiss();
                 break;
@@ -150,7 +170,5 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         }catch(IOException e){
             e.printStackTrace();
         }
-
-        Toast.makeText(this, "All Songs added.", Toast.LENGTH_LONG).show();
     }
 }
