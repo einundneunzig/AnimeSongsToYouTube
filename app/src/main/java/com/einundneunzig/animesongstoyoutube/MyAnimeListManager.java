@@ -1,5 +1,9 @@
 package com.einundneunzig.animesongstoyoutube;
 
+import com.einundneunzig.animesongstoyoutube.myanimelist.RelatedAnime;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +22,7 @@ import java.util.Set;
 public abstract class MyAnimeListManager {
 
 
-    private static String getAPIResponse(URL url) throws IOException {
+    public static String getAPIResponse(URL url) throws IOException {
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -42,7 +46,11 @@ public abstract class MyAnimeListManager {
         int size = relatedAnime.size();
         System.out.println(size);
 
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        mapper.findAndRegisterModules();
         URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=related_anime");
+        mapper.readValue(url, RelatedAnime.class);
+
         String response = getAPIResponse(url);
 
         int position = response.indexOf("\"id\":", 6);  //Skip first id (Id of current anime)

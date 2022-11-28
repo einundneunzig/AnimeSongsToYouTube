@@ -12,7 +12,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.xml.details_activity_settings_preferences);
+        //setContentView(R.xml.details_activity_settings_preferences);
     }
 
 }

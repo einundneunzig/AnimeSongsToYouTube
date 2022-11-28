@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.einundneunzig.animesongstoyoutube.myanimelist.RelatedAnime;
+import com.einundneunzig.animesongstoyoutube.myanimelist.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -71,6 +75,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateUI(account);
         findViewById(R.id.buttonSignOut).setOnClickListener(this);
         findViewById(R.id.search).setOnClickListener(this);
+
+        new Thread(()->{
+
+            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+            mapper.findAndRegisterModules();
+            URL url = null;
+            Response relatedAnime = null;
+            try {
+                url = new URL("https://api.myanimelist.net/v2/anime/" + 1 + "?fields=related_anime");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            try {
+                System.out.println(MyAnimeListManager.getAPIResponse(url).replace("\\", ""));
+                relatedAnime = mapper.readValue(MyAnimeListManager.getAPIResponse(url).replace("\\", ""), Response.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for(RelatedAnime r: relatedAnime.getRelatedAnime()){
+                System.out.println(r.getRelation_type());
+            }
+        }).start();
     }
 
     private void updateUI(GoogleSignInAccount account) {
