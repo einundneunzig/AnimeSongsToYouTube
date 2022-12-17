@@ -3,9 +3,12 @@ package com.einundneunzig.animesongstoyoutube;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.einundneunzig.animesongstoyoutube.myanimelist.Node;
+import com.einundneunzig.animesongstoyoutube.myanimelist.RelatedAnime;
+import com.einundneunzig.animesongstoyoutube.myanimelist.Theme;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,13 +35,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.api.services.youtube.YouTubeScopes;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Anime anime;
+    private Node node;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
     private PopupWindow popupWindow;
@@ -44,13 +56,16 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        anime = (Anime) intent.getSerializableExtra("anime");
+
+        node = MyAnimeListManager.getAnimeDetails(intent.getIntExtra("animeId", -1));
 
         setContentView(R.layout.activity_anime_details);
         ImageView animeImage = findViewById(R.id.animeImageView);
         TextView animeTitle = findViewById(R.id.animeTitleView);
-        animeImage.setImageBitmap(anime.getImage());
-        animeTitle.setText(anime.getTitle());
+
+        animeImage.setImageBitmap(node.getMain_picture().getLargeBitmap());
+        animeTitle.setText(node.getTitle());
+
         findViewById(R.id.convertButton).setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -143,32 +158,53 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     private void saveThemesToPlaylist() {
 
         ProgressBar progressBar = findViewById(R.id.progressBar);
-        try {
-            HashMap<String, String> themes = MyAnimeListManager.getThemes(anime.getId());
 
-            CheckBox checkBox1 = findViewById(R.id.checkBoxAllSongs);
-            if(checkBox1.isChecked()){
-                List<Integer> relatedAnime = MyAnimeListManager.getRelatedAnime(anime.getId());
-                for(int id: relatedAnime){
-                    themes.putAll(MyAnimeListManager.getThemes(id));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean sequels = sharedPreferences.getBoolean("sequels", false);
+        boolean prequels = sharedPreferences.getBoolean("prequels", false);
+        boolean others = sharedPreferences.getBoolean("others", false);
+
+        Set<Theme> themes = new HashSet<>();
+        themes.addAll(Arrays.asList(node.getOpeningThemes()));
+        themes.addAll(Arrays.asList(node.getEndingThemes()));
+
+        if(sequels){
+            themes.addAll(MyAnimeListManager.getSequelThemes(node.getRelatedAnime()));
+        }
+
+        if(prequels){
+            for(RelatedAnime relatedAnime: node.getRelatedAnime()){
+                if(relatedAnime.getRelationType().equalsIgnoreCase("prequel")){
+
                 }
             }
-            progressBar.setMax(themes.size());
-            progressBar.setIndeterminate(false);
+        }
+        if(others){
+            for(RelatedAnime relatedAnime: node.getRelatedAnime()){
+                if(relatedAnime.getRelationType().equalsIgnoreCase("other")){
 
-            YoutubeManager.setAccount(account, this);
-
-            String playlistId = YoutubeManager.createPlaylist(anime.getTitle()+" OSTs", "private");
-
-            progressBar.setProgress(1);
-            for(Map.Entry<String, String> e: themes.entrySet()) {
-                String videoId = YoutubeManager.searchYouTubeForSong(e.getKey(), e.getValue());
-                YoutubeManager.addVideoToPlaylist(playlistId, videoId);
-                progressBar.setProgress(progressBar.getProgress()+1);
+                }
             }
+        }
 
-        }catch(IOException e){
+        progressBar.setMax(themes.size());
+        progressBar.setIndeterminate(false);
+
+        YoutubeManager.setAccount(account, this);
+
+        String playlistId = null;
+        try {
+            playlistId = YoutubeManager.createPlaylist(node.getTitle() +" OSTs", "private");
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        progressBar.setProgress(1);
+        for(Theme theme: themes) {
+            String videoId = YoutubeManager.searchYouTubeForSong(theme.getTitle(), theme.getSinger());
+            YoutubeManager.addVideoToPlaylist(playlistId, videoId);
+            progressBar.setProgress(progressBar.getProgress()+1);
+        }
+
     }
 }

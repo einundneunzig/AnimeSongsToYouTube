@@ -112,18 +112,15 @@ public abstract class YoutubeManager {
         final SearchResult[] searchResult = new SearchResult[1];
 
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SearchListResponse searchListResponse = null;
-                try {
-                    searchListResponse = mService.search().list("snippet").setQ(title + " " + singer).setType("video").setVideoCategoryId("10").execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(searchListResponse != null || searchListResponse.getItems().size() != 0){
-                    searchResult[0] = searchListResponse.getItems().get(0);
-                }
+        Thread t = new Thread(() -> {
+            SearchListResponse searchListResponse = null;
+            try {
+                searchListResponse = mService.search().list("snippet").setQ(title + " " + singer).setType("video").setVideoCategoryId("10").execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(searchListResponse != null || searchListResponse.getItems().size() != 0){
+                searchResult[0] = searchListResponse.getItems().get(0);
             }
         });
         t.start();

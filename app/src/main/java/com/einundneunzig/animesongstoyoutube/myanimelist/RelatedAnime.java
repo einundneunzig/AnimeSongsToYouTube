@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RelatedAnime {
     private Node node;
-    private String relation_type;
-    private String relation_type_formatted;
+    private String relationType;
+    private String relationTypeFormatted;
 
-    public RelatedAnime(Node node, String relation_type, String relation_type_formatted) {
+    public RelatedAnime(Node node, String relationType, String relationTypeFormatted) {
         this.node = node;
-        this.relation_type = relation_type;
-        this.relation_type_formatted = relation_type_formatted;
+        this.relationType = relationType;
+        this.relationTypeFormatted = relationTypeFormatted;
     }
 
     public RelatedAnime() {
@@ -20,12 +20,12 @@ public class RelatedAnime {
         return node;
     }
 
-    public String getRelation_type() {
-        return relation_type;
+    public String getRelationType() {
+        return relationType;
     }
 
-    public String getRelation_type_formatted() {
-        return relation_type_formatted;
+    public String getRelationTypeFormatted() {
+        return relationTypeFormatted;
     }
 
 
@@ -35,12 +35,12 @@ public class RelatedAnime {
     }
 
     @JsonProperty("relation_type")
-    public void setRelation_type(String relation_type) {
-        this.relation_type = relation_type;
+    public void setRelationType(String relationType) {
+        this.relationType = relationType;
     }
 
     @JsonProperty("relation_type_formatted")
-    public void setRelation_type_formatted(String relation_type_formatted) {
-        this.relation_type_formatted = relation_type_formatted;
+    public void setRelationTypeFormatted(String relationTypeFormatted) {
+        this.relationTypeFormatted = relationTypeFormatted;
     }
 }

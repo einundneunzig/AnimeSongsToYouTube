@@ -17,13 +17,13 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="action_settings">Einstellungen</string>
     <string name="myanimelist_settings">MyAnimeList Einstellungen</string>
-    <string name="include_sequel">Sequels konvertieren</string>
-    <string name="include_sequel_on">Sequels werden konvertiert</string>
-    <string name="include_sequel_off">Sequels werden nicht konvertiert</string>
-    <string name="include_prequel">Prequels konvertieren</string>
-    <string name="include_prequel_on">Prequels werden konvertiert</string>
-    <string name="include_prequel_off">Prequels werden nicht konvertiert</string>
-    <string name="include_other">Others konvertieren</string>
-    <string name="include_other_on">Others werden konvertiert</string>
-    <string name="include_other_off">Others werden nicht konvertiert</string>
+    <string name="include_sequels">Sequels konvertieren</string>
+    <string name="include_sequels_on">Sequels werden konvertiert</string>
+    <string name="include_sequels_off">Sequels werden nicht konvertiert</string>
+    <string name="include_prequels">Prequels konvertieren</string>
+    <string name="include_prequels_on">Prequels werden konvertiert</string>
+    <string name="include_prequels_off">Prequels werden nicht konvertiert</string>
+    <string name="include_others">Others konvertieren</string>
+    <string name="include_others_on">Others werden konvertiert</string>
+    <string name="include_others_off">Others werden nicht konvertiert</string>
 </resources>

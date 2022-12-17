@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelatedAnime;
-import com.einundneunzig.animesongstoyoutube.myanimelist.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,9 +25,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -37,15 +33,11 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.YouTubeScopes;
 import com.google.api.services.youtube.model.Playlist;
-import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistListResponse;
 import com.google.api.services.youtube.model.PlaylistSnippet;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -75,29 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateUI(account);
         findViewById(R.id.buttonSignOut).setOnClickListener(this);
         findViewById(R.id.search).setOnClickListener(this);
-
-        new Thread(()->{
-
-            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-            mapper.findAndRegisterModules();
-            URL url = null;
-            Response relatedAnime = null;
-            try {
-                url = new URL("https://api.myanimelist.net/v2/anime/" + 1 + "?fields=related_anime");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            try {
-                System.out.println(MyAnimeListManager.getAPIResponse(url).replace("\\", ""));
-                relatedAnime = mapper.readValue(MyAnimeListManager.getAPIResponse(url).replace("\\", ""), Response.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            for(RelatedAnime r: relatedAnime.getRelatedAnime()){
-                System.out.println(r.getRelation_type());
-            }
-        }).start();
     }
 
     private void updateUI(GoogleSignInAccount account) {

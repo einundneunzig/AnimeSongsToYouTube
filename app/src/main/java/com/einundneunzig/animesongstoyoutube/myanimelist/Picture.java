@@ -1,6 +1,12 @@
 package com.einundneunzig.animesongstoyoutube.myanimelist;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class Picture {
     private String medium;
@@ -12,6 +18,33 @@ public class Picture {
     }
 
     public Picture() {
+    }
+
+    public Bitmap getMediumBitmap() {
+        return getBitmap(medium);
+    }
+
+    public Bitmap getLargeBitmap(){
+        return getBitmap(large);
+    }
+
+    private Bitmap getBitmap(String pictureUrl){
+        final Bitmap[] bitmap = new Bitmap[1];
+        Thread t = new Thread(() -> {
+            try {
+                bitmap[0] = BitmapFactory.decodeStream(new URL(pictureUrl).openStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap[0];
     }
 
     public String getMedium() {

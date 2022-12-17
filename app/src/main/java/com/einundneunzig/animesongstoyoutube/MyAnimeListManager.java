@@ -1,6 +1,13 @@
 package com.einundneunzig.animesongstoyoutube;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.einundneunzig.animesongstoyoutube.myanimelist.AnimeList;
+import com.einundneunzig.animesongstoyoutube.myanimelist.Node;
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelatedAnime;
+import com.einundneunzig.animesongstoyoutube.myanimelist.Theme;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -11,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,7 +38,7 @@ public abstract class MyAnimeListManager {
         con.getInputStream();
         BufferedReader response = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-        return response.readLine();
+        return response.readLine().replace("\\/", "/");
     }
 
     public static List<Integer> getRelatedAnime(int animeId)throws IOException {
@@ -81,7 +89,7 @@ public abstract class MyAnimeListManager {
 
     public static Map<String, String> getEndingThemes(int animeId) throws IOException{
 
-        URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=ending_themes{text}");
+        URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=ending_themes");
 
         String response = getAPIResponse(url);
 
@@ -92,7 +100,7 @@ public abstract class MyAnimeListManager {
 
     public static Map<String, String> getOpeningThemes(int animeId) throws IOException {
 
-        URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=opening_themes{text}");
+        URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=opening_themes");
 
         String response = getAPIResponse(url);
 
@@ -130,5 +138,55 @@ public abstract class MyAnimeListManager {
         }
 
         return themes;
+    }
+
+    public static Node getAnimeDetails(int animeId) {
+
+        final Node[] node = {null};
+
+        Thread t = new Thread(() -> {
+
+            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+            mapper.findAndRegisterModules();
+
+            try {
+                URL url = new URL("https://api.myanimelist.net/v2/anime/" + animeId + "?fields=related_anime,opening_themes,ending_themes");
+                node[0] = mapper.readValue(MyAnimeListManager.getAPIResponse(url), Node.class);
+
+            } catch (IOException e) { e.printStackTrace(); }
+        });
+
+        t.start();
+
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return node[0];
+    }
+
+    public static Set<Theme> getSequelThemes(RelatedAnime[] relatedAnimeArray) {
+        Set<Theme> sequelThemes = new HashSet<>();
+
+        for(RelatedAnime relatedAnime: relatedAnimeArray){
+            Log.d("relatedAnime", relatedAnime.getNode().getTitle());
+
+            if(relatedAnime.getRelationType().equalsIgnoreCase("sequel")){
+                relatedAnime.getNode().loadDetails();
+                Theme[] opThemes = relatedAnime.getNode().getOpeningThemes();
+                if(opThemes!=null){
+                    sequelThemes.addAll(Arrays.asList(opThemes));
+                }
+                Theme[] edThemes = relatedAnime.getNode().getEndingThemes();
+                if(edThemes!=null){
+                    sequelThemes.addAll(Arrays.asList(edThemes));
+                }
+
+                sequelThemes.addAll(getSequelThemes(relatedAnime.getNode().getRelatedAnime()));
+            }
+        }
+
+        return sequelThemes;
     }
 }

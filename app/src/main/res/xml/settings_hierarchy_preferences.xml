@@ -4,24 +4,24 @@
         android:title="@string/myanimelist_settings"></PreferenceCategory>
     <SwitchPreferenceCompat
         android:defaultValue="false"
-        android:key="sequel"
-        android:summaryOff="@string/include_sequel_off"
-        android:summaryOn="@string/include_sequel_on"
-        android:title="@string/include_sequel"></SwitchPreferenceCompat>
+        android:key="sequels"
+        android:summaryOff="@string/include_sequels_off"
+        android:summaryOn="@string/include_sequels_on"
+        android:title="@string/include_sequels"></SwitchPreferenceCompat>
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="prequel"
-        android:summaryOff="@string/include_prequel_off"
-        android:summaryOn="@string/include_prequel_on"
-        android:title="@string/include_prequel"></CheckBoxPreference>
+        android:key="prequels"
+        android:summaryOff="@string/include_prequels_off"
+        android:summaryOn="@string/include_prequels_on"
+        android:title="@string/include_prequels"></CheckBoxPreference>
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="other"
-        android:summaryOff="@string/include_other_off"
-        android:summaryOn="@string/include_other_on"
-        android:title="@string/include_other"></CheckBoxPreference>
+        android:key="others"
+        android:summaryOff="@string/include_others_off"
+        android:summaryOn="@string/include_others_on"
+        android:title="@string/include_others"></CheckBoxPreference>
 
 
 </PreferenceScreen>

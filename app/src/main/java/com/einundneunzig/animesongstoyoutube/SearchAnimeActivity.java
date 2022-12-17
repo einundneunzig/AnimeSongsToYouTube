@@ -3,15 +3,9 @@ package com.einundneunzig.animesongstoyoutube;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,25 +13,20 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.einundneunzig.animesongstoyoutube.myanimelist.AnimeList;
+import com.einundneunzig.animesongstoyoutube.myanimelist.Node;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchAnimeActivity extends AppCompatActivity implements TextView.OnEditorActionListener, View.OnClickListener {
 
-    private LinearLayout animeList;
+    private LinearLayout animeListLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,95 +34,60 @@ public class SearchAnimeActivity extends AppCompatActivity implements TextView.O
         setContentView(R.layout.activity_search_anime);
         EditText textField = findViewById(R.id.searchAnimeTextField);
         textField.setOnEditorActionListener(this);
-        animeList = findViewById(R.id.animeList);
+        animeListLayout = findViewById(R.id.animeList);
     }
 
     private void searchAnime(String search) {
 
-        List<Anime> loadedAnime = new ArrayList<>();
 
-        final String[] response = {null};
+        final AnimeList[] animeList = {null};
 
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
+            Thread t = new Thread(() -> {
 
-                    try {
-                    URL url = new URL("https://api.myanimelist.net/v2/anime?q=" + search + "&limit=10&nsfw=true");
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    con.setRequestMethod("GET");
-                    con.setRequestProperty("X-MAL-CLIENT-ID", "3f5dca7ffc3b2dbae618687b2778a04c");
-                    con.getInputStream();
-                    BufferedReader responseReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    response[0] = responseReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                }
+                ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+                mapper.findAndRegisterModules();
+
+                try {
+                URL url = new URL("https://api.myanimelist.net/v2/anime?q=" + search + "&limit=10&nsfw=true");
+                animeList[0] = mapper.readValue(MyAnimeListManager.getAPIResponse(url), AnimeList.class);
+
+                } catch (IOException e) { e.printStackTrace(); }
             });
 
             t.start();
+
         try {
             t.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        if(response[0] ==null) ;//Fehler
-        else{
-            int lastIndex = response[0].indexOf("\"id\"");
-            while(lastIndex!=-1){
-                int id;
-                String title;
-                URL photoUrl = null;
-
-
-                int idPosBeg = lastIndex+5;
-                int idPosEd = response[0].indexOf(",",idPosBeg);
-                id = Integer.parseInt(response[0].substring(idPosBeg, idPosEd));
-
-                int titlePosBeg = idPosEd+10;
-                int titlePosEd = response[0].indexOf(",",titlePosBeg);
-                title = response[0].substring(titlePosBeg, titlePosEd-1);
-
-                int photoPosBeg = titlePosEd+27;
-                int photoPosEd = response[0].indexOf(",",photoPosBeg);
-                try {
-                    photoUrl = new URL(response[0].substring(photoPosBeg, photoPosEd-1));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-
-                lastIndex = response[0].indexOf("\"id\"",photoPosEd);
-                loadedAnime.add(new Anime(id, title, photoUrl));
-            }
-        }
-
-        updateAnimeList(loadedAnime);
+        updateAnimeList(animeList[0]);
     }
 
-    private void updateAnimeList(List<Anime> loadedAnime) {
-        animeList.removeAllViews();
-        for(Anime anime: loadedAnime){
-            LinearLayout layout = new LinearLayout(getApplicationContext());
-            layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
-            layout.setOrientation(LinearLayout.HORIZONTAL);
+    private void updateAnimeList(AnimeList animeList) {
+        animeListLayout.removeAllViews();
 
+        //Creating Horizontal LinearLayout for each node (Anime from search Result), giving it a Tag with it's Id and adding it to animeListLayout
+        for(Node node: animeList.getData()){
+            LinearLayout nodeLayout = new LinearLayout(getApplicationContext());
+            nodeLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT));
+            nodeLayout.setOrientation(LinearLayout.HORIZONTAL);
 
             ImageView image = new ImageView(this);
             image.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT, 3));
-            image.setImageBitmap(anime.getImage());
+            image.setImageBitmap(node.getMain_picture().getMediumBitmap());
 
             TextView text = new TextView(this);
             text.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT, 1));
-            text.setText(anime.getTitle());
+            text.setText(node.getTitle());
 
-            layout.addView(image);
-            layout.addView(text);
+            nodeLayout.addView(image);
+            nodeLayout.addView(text);
 
-            layout.setTag(anime);
-            layout.setOnClickListener(this);
-            animeList.addView(layout);
+            nodeLayout.setTag(node.getId());
+            nodeLayout.setOnClickListener(this);
+            animeListLayout.addView(nodeLayout);
         }
     }
 
@@ -154,9 +108,9 @@ public class SearchAnimeActivity extends AppCompatActivity implements TextView.O
         if(view instanceof LinearLayout){
             LinearLayout animeLayout = (LinearLayout) view;
             if(((LinearLayout) view).getOrientation() == LinearLayout.HORIZONTAL){
-                Anime anime = (Anime)animeLayout.getTag();
+                int id = (int) animeLayout.getTag();
                 Intent intent = new Intent(this, AnimeDetailsActivity.class);
-                intent.putExtra("anime", anime);
+                intent.putExtra("animeId", id);
                 startActivity(intent);
             }
         }
