@@ -9,28 +9,28 @@
             android:summaryOff="@string/include_sequels_off"
             android:summaryOn="@string/include_sequels_on"
             android:title="@string/include_sequels"
-            android:dependency="all" />
+            android:dependency="all"/>
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="prequels"
             android:summaryOff="@string/include_prequels_off"
             android:summaryOn="@string/include_prequels_on"
             android:title="@string/include_prequels"
-            android:dependency="all" />
+            android:dependency="all"/>
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="side_stories"
             android:summaryOff="@string/include_side_stories_off"
             android:summaryOn="@string/include_side_stories_on"
             android:title="@string/include_side_stories"
-            android:dependency="all" />
+            android:dependency="all"/>
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="spin_offs"
             android:summaryOff="@string/include_spin_offs_off"
             android:summaryOn="@string/include_spin_offs_on"
             android:title="@string/include_spin_offs"
-            android:dependency="all" />
+            android:dependency="all"/>
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="others"
@@ -43,7 +43,8 @@
             android:key="all"
             android:summaryOff="@string/include_all_off"
             android:summaryOn="@string/include_all_on"
-            android:title="@string/include_all" />
+            android:title="@string/include_all"
+            android:disableDependentsState="true"/>
     </PreferenceCategory>
 
 
@@ -66,8 +67,7 @@
             android:title="test"
             android:entries="@array/reply_entries"
             android:entryValues="@array/reply_values"
-            >
-        </DropDownPreference>
+            />
 
 
         <SwitchPreferenceCompat
@@ -76,6 +76,7 @@
 
         <EditTextPreference
             android:dependency="add_to_playlist"
+            android:key="add_to_playlist_name"
             android:title="name" />
 
     </PreferenceCategory>

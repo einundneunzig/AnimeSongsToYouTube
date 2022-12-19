@@ -166,25 +166,36 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         boolean others = sharedPreferences.getBoolean("others", false);
         boolean side_stories = sharedPreferences.getBoolean("side_stories", false);
         boolean spin_offs = sharedPreferences.getBoolean("spin_offs", false);
+        boolean all = sharedPreferences.getBoolean("all", false);
 
         Set<Theme> themes = new HashSet<>();
         themes.addAll(Arrays.asList(node.getOpeningThemes()));
         themes.addAll(Arrays.asList(node.getEndingThemes()));
 
-        if(sequels){
+        if(all){
             themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.sequel));
-        }
-        if(prequels){
             themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.prequel));
-        }
-        if(side_stories){
             themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.side_story));
-        }
-        if(spin_offs){
             themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.spin_off));
-        }
-        if(others){
             themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.other));
+        }else{
+
+            if(sequels){
+                themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.sequel));
+            }
+            if(prequels){
+                themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.prequel));
+            }
+            if(side_stories){
+                themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.side_story));
+            }
+            if(spin_offs){
+                themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.spin_off));
+            }
+            if(others){
+                themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.other));
+            }
+
         }
 
         progressBar.setMax(themes.size());
