@@ -35,6 +35,10 @@
     <string name="include_spin_offs_on">Spin-Offs werden konvertiert</string>
     <string name="include_spin_offs_off">Spin-Offs werden nicht konvertiert</string>
 
+    <string name="include_all">Alles konvertieren</string>
+    <string name="include_all_on">Alles wird konvertiert</string>
+    <string name="include_all_off">Es wird nicht alles konvertiert</string>
+
     <string name="youtube_settings">YouTube Einstellungen</string>
     <string name="create_new_playlist">Neue Playlist erstellen</string>
     <string name="add_to_playlist">Zu Playlist hinzufügen</string>

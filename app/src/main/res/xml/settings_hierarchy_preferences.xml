@@ -8,51 +8,76 @@
             android:key="sequels"
             android:summaryOff="@string/include_sequels_off"
             android:summaryOn="@string/include_sequels_on"
-            android:title="@string/include_sequels"></SwitchPreferenceCompat>
+            android:title="@string/include_sequels"
+            android:dependency="all" />
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="prequels"
             android:summaryOff="@string/include_prequels_off"
             android:summaryOn="@string/include_prequels_on"
-            android:title="@string/include_prequels"></SwitchPreferenceCompat>
+            android:title="@string/include_prequels"
+            android:dependency="all" />
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="side_stories"
             android:summaryOff="@string/include_side_stories_off"
             android:summaryOn="@string/include_side_stories_on"
-            android:title="@string/include_side_stories"></SwitchPreferenceCompat>
+            android:title="@string/include_side_stories"
+            android:dependency="all" />
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="spin_offs"
             android:summaryOff="@string/include_spin_offs_off"
             android:summaryOn="@string/include_spin_offs_on"
-            android:title="@string/include_spin_offs"></SwitchPreferenceCompat>
+            android:title="@string/include_spin_offs"
+            android:dependency="all" />
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="others"
             android:summaryOff="@string/include_others_off"
             android:summaryOn="@string/include_others_on"
-            android:title="@string/include_others"></SwitchPreferenceCompat>
+            android:title="@string/include_others"
+            android:dependency="all"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="all"
+            android:summaryOff="@string/include_all_off"
+            android:summaryOn="@string/include_all_on"
+            android:title="@string/include_all" />
     </PreferenceCategory>
 
 
     <PreferenceCategory
         android:title="@string/youtube_settings">
+
+        <Preference
+            android:title="Anmelden"
+            android:key="log_in"/>
+
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="create_new_playlist"
-            android:title="@string/create_new_playlist"/>
+            android:title="@string/create_new_playlist" />
         <EditTextPreference
             android:dependency="create_new_playlist"
-            android:dialogMessage="test"
             android:key="create_new_playlist_name"
             android:title="name" />
+        <DropDownPreference
+            android:title="test"
+            android:entries="@array/reply_entries"
+            android:entryValues="@array/reply_values"
+            >
+        </DropDownPreference>
+
 
         <SwitchPreferenceCompat
             android:key="add_to_playlist"
-            android:title="@string/add_to_playlist">
+            android:title="@string/add_to_playlist" />
 
-        </SwitchPreferenceCompat>
+        <EditTextPreference
+            android:dependency="add_to_playlist"
+            android:title="name" />
+
     </PreferenceCategory>
 
 
