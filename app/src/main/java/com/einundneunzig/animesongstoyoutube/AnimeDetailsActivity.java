@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.einundneunzig.animesongstoyoutube.myanimelist.Node;
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelatedAnime;
+import com.einundneunzig.animesongstoyoutube.myanimelist.RelationType;
 import com.einundneunzig.animesongstoyoutube.myanimelist.Theme;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -169,22 +170,14 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         themes.addAll(Arrays.asList(node.getEndingThemes()));
 
         if(sequels){
-            themes.addAll(MyAnimeListManager.getSequelThemes(node.getRelatedAnime()));
+            themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.sequel));
         }
 
         if(prequels){
-            for(RelatedAnime relatedAnime: node.getRelatedAnime()){
-                if(relatedAnime.getRelationType().equalsIgnoreCase("prequel")){
-
-                }
-            }
+            themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.prequel));
         }
         if(others){
-            for(RelatedAnime relatedAnime: node.getRelatedAnime()){
-                if(relatedAnime.getRelationType().equalsIgnoreCase("other")){
-
-                }
-            }
+            themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.other));
         }
 
         progressBar.setMax(themes.size());
