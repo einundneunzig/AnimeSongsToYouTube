@@ -26,4 +26,15 @@
     <string name="include_others">Others konvertieren</string>
     <string name="include_others_on">Others werden konvertiert</string>
     <string name="include_others_off">Others werden nicht konvertiert</string>
+
+    <string name="include_side_stories">Side Stories konvertieren</string>
+    <string name="include_side_stories_on">Side Stories werden konvertiert</string>
+    <string name="include_side_stories_off">Side Stories werden nicht konvertiert</string>
+
+    <string name="include_spin_offs">Spin-Offs konvertieren</string>
+    <string name="include_spin_offs_on">Spin-Offs werden konvertiert</string>
+    <string name="include_spin_offs_off">Spin-Offs werden nicht konvertiert</string>
+
+    <string name="youtube_settings">YouTube Einstellungen</string>
+    <string name="create_new_playlist">Neue Playlist erstellen</string>
 </resources>

@@ -10,19 +10,47 @@
         android:summaryOn="@string/include_sequels_on"
         android:title="@string/include_sequels"></SwitchPreferenceCompat>
 
-    <CheckBoxPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="prequels"
         android:summaryOff="@string/include_prequels_off"
         android:summaryOn="@string/include_prequels_on"
-        android:title="@string/include_prequels"></CheckBoxPreference>
+        android:title="@string/include_prequels"></SwitchPreferenceCompat>
 
-    <CheckBoxPreference
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="side_stories"
+        android:summaryOff="@string/include_side_stories_off"
+        android:summaryOn="@string/include_side_stories_on"
+        android:title="@string/include_side_stories"></SwitchPreferenceCompat>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="spin_offs"
+        android:summaryOff="@string/include_spin_offs_off"
+        android:summaryOn="@string/include_spin_offs_on"
+        android:title="@string/include_spin_offs"></SwitchPreferenceCompat>
+
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="others"
         android:summaryOff="@string/include_others_off"
         android:summaryOn="@string/include_others_on"
-        android:title="@string/include_others"></CheckBoxPreference>
+        android:title="@string/include_others"></SwitchPreferenceCompat>
 
 
+    <PreferenceCategory
+        android:title="@string/youtube_settings"></PreferenceCategory>
+
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="create_new_playlist"
+        android:title="@string/create_new_playlist"></SwitchPreferenceCompat>
+
+    <EditTextPreference
+        android:key="create_new_playlist_name"
+        android:dependency="create_new_playlist"
+        android:title="name"
+        android:dialogMessage="test"/>
 </PreferenceScreen>

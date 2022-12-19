@@ -172,7 +172,6 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         if(sequels){
             themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.sequel));
         }
-
         if(prequels){
             themes.addAll(MyAnimeListManager.getThemes(node.getRelatedAnime(), RelationType.prequel));
         }
