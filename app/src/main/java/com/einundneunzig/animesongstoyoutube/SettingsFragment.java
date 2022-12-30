@@ -78,12 +78,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                             })
                             .show();
 
+                    return false;
                 }
             default:
-                break;
+                return true;
         }
 
-        return false;
     }
 
 
