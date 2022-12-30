@@ -60,8 +60,10 @@
         android:id="@+id/search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="154dp"
+        android:layout_marginBottom="65dp"
         android:text="Search"
-        tools:layout_editor_absoluteX="164dp"
-        tools:layout_editor_absoluteY="618dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,20 @@
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
 
+    <!-- Actions -->
+    <string name="ok">Ok</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="abort">Abbrechen</string>
+    <string name="accept">Akzeptieren</string>
+    <string name="decline">Ablehnen</string>
+    <string name="activate_nonetheless">Trotzdem aktivieren</string>
+
+
+    <!-- Warnings -->
+    <string name="warning">Warnung</string>
+    <string name="crossover_warning">Bei Crossover Episoden wird anderer Anime ebenfalls konvertiert.</string>
+
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
@@ -44,6 +58,9 @@
     <string name="add_to_playlist">Zu Playlist hinzufügen</string>
 
     <string name="log_in">Anmelden</string>
-    <string name="logged_in_summary">Zum abmelden klicken</string>
+    <string name="logged_in_summary">Zum Abmelden klicken</string>
     <string name="logged_in_title">Angemeldet als</string>
+    <string name="privacy_status_title">Sichtbarkeit</string>
+    <string name="name_of_playlist">Playlist Name</string>
+
 </resources>

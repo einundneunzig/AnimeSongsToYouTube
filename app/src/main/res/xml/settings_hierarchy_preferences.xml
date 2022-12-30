@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="@string/myanimelist_settings">
+        android:title="@string/myanimelist_settings"
+        app:iconSpaceReserved="false">
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="sequels"
             android:summaryOff="@string/include_sequels_off"
@@ -11,6 +14,7 @@
             android:title="@string/include_sequels"
             android:dependency="all"/>
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="prequels"
             android:summaryOff="@string/include_prequels_off"
@@ -18,6 +22,7 @@
             android:title="@string/include_prequels"
             android:dependency="all"/>
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="side_stories"
             android:summaryOff="@string/include_side_stories_off"
@@ -25,6 +30,7 @@
             android:title="@string/include_side_stories"
             android:dependency="all"/>
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="spin_offs"
             android:summaryOff="@string/include_spin_offs_off"
@@ -32,6 +38,7 @@
             android:title="@string/include_spin_offs"
             android:dependency="all"/>
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="others"
             android:summaryOff="@string/include_others_off"
@@ -39,6 +46,7 @@
             android:title="@string/include_others"
             android:dependency="all"/>
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="all"
             android:summaryOff="@string/include_all_off"
@@ -49,35 +57,47 @@
 
 
     <PreferenceCategory
+        app:iconSpaceReserved="false"
         android:title="@string/youtube_settings">
 
         <Preference
+            app:iconSpaceReserved="false"
             android:title="Anmelden"
             android:key="log_in"/>
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="create_new_playlist"
             android:title="@string/create_new_playlist" />
-        <EditTextPreference
-            android:dependency="create_new_playlist"
-            android:key="create_new_playlist_name"
-            android:title="name" />
-        <DropDownPreference
-            android:title="test"
-            android:entries="@array/reply_entries"
-            android:entryValues="@array/reply_values"
-            />
+
+            <EditTextPreference
+                android:dependency="create_new_playlist"
+                android:key="create_new_playlist_name"
+                android:title="@string/name_of_playlist"
+                android:defaultValue="[name] OSTs"
+                app:useSimpleSummaryProvider="true"/>
+            <DropDownPreference
+                android:dependency="create_new_playlist"
+                android:key="privacy_status_drop_down"
+                android:title="@string/privacy_status_title"
+                android:entries="@array/privacy_status_entries"
+                android:entryValues="@array/privacy_status_values"
+                app:useSimpleSummaryProvider="true"/>
 
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             android:key="add_to_playlist"
             android:title="@string/add_to_playlist" />
 
-        <EditTextPreference
-            android:dependency="add_to_playlist"
-            android:key="add_to_playlist_name"
-            android:title="name" />
+            <EditTextPreference
+                android:dependency="add_to_playlist"
+                android:key="add_to_playlist_name"
+                android:title="@string/name_of_playlist"
+                android:defaultValue=""
+                app:useSimpleSummaryProvider="true"/>
+
 
     </PreferenceCategory>
 
