@@ -1,8 +1,5 @@
 package com.einundneunzig.animesongstoyoutube;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.einundneunzig.animesongstoyoutube.myanimelist.RelatedAnime;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -54,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestProfile()
                 .requestScopes(new Scope(YouTubeScopes.YOUTUBE_FORCE_SSL))
+                .requestEmail()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -67,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateUI(account);
         findViewById(R.id.buttonSignOut).setOnClickListener(this);
         findViewById(R.id.search).setOnClickListener(this);
+
+
     }
 
     private void updateUI(GoogleSignInAccount account) {
@@ -156,16 +156,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
         YouTube mService = new com.google.api.services.youtube.YouTube.Builder(
                 transport, jsonFactory, credential)
-                .setApplicationName("YouTube Data API Android Quickstart")
+                .setApplicationName("AnimeSongsToYouTube")
                 .build();
         TextView textViewResult = findViewById(R.id.textViewResult);
         textViewResult.setText("Playlist:");
-                new Thread(new Runnable() {
+               new Thread(new Runnable() {
                     @Override
                     public void run() {
 
                         try {
-                            PlaylistListResponse response = mService.playlists().list("snippet").setMine(true).execute();
+                            PlaylistListResponse response = mService.playlists().list("snippet")
+                                .setMine(true)
+                                .execute();
 
                             for(Playlist p: response.getItems()){
                                 runOnUiThread(new Runnable() {
@@ -175,13 +177,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 });
                             }
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }).start();
-
-
 
     }
 
@@ -189,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            System.out.println(account.getDisplayName());
             updateUI(account);
             callYoutubeAPI();
 

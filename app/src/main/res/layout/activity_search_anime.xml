@@ -23,8 +23,7 @@
         <ScrollView
             android:id="@+id/animeListScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="Hallol">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/animeList"

@@ -1,21 +1,12 @@
 <resources>
-    <string name="app_name">AnimeSongsToYouTube</string>
+    <string name="app_name" translatable="false">AnimeSongsToYouTube</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Actions -->
-    <string name="ok">Ok</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nein</string>
     <string name="abort">Abbrechen</string>
-    <string name="accept">Akzeptieren</string>
-    <string name="decline">Ablehnen</string>
     <string name="activate_nonetheless">Trotzdem aktivieren</string>
 
 
@@ -24,11 +15,6 @@
     <string name="crossover_warning">Bei Crossover Episoden wird anderer Anime ebenfalls konvertiert.</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="action_settings">Einstellungen</string>
     <string name="myanimelist_settings">MyAnimeList Einstellungen</string>
     <string name="include_sequels">Sequels konvertieren</string>
@@ -61,6 +47,8 @@
     <string name="logged_in_summary">Zum Abmelden klicken</string>
     <string name="logged_in_title">Angemeldet als</string>
     <string name="privacy_status_title">Sichtbarkeit</string>
-    <string name="name_of_playlist">Playlist Name</string>
+    <string name="name_of_playlist">Playlist-Name</string>
+    <string name="playlist_id_empty">Playlist-ID ist leer</string>
+    <string name="not_logged_in">Du bist nicht angemeldet</string>
 
 </resources>

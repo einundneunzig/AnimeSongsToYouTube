@@ -39,7 +39,6 @@ public class SearchAnimeActivity extends AppCompatActivity implements TextView.O
 
     private void searchAnime(String search) {
 
-
         final AnimeList[] animeList = {null};
 
             Thread t = new Thread(() -> {

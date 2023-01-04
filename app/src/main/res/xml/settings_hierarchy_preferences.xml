@@ -86,17 +86,10 @@
                 app:useSimpleSummaryProvider="true"/>
 
 
-        <SwitchPreferenceCompat
+        <Preference
             app:iconSpaceReserved="false"
             android:key="add_to_playlist"
-            android:title="@string/add_to_playlist" />
-
-            <EditTextPreference
-                android:dependency="add_to_playlist"
-                android:key="add_to_playlist_name"
-                android:title="@string/name_of_playlist"
-                android:defaultValue=""
-                app:useSimpleSummaryProvider="true"/>
+            android:title="@string/add_to_playlist"/>
 
 
     </PreferenceCategory>
