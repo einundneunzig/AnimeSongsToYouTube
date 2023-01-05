@@ -16,7 +16,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.settings_container, new SettingsFragment())
+                .replace(R.id.settings_container, new SettingsFragment(), "SettingsFragment")
                 .addToBackStack("SettingsFragment")
                 .commit();
 

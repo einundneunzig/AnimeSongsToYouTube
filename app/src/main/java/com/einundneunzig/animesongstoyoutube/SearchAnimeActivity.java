@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.einundneunzig.animesongstoyoutube.myanimelist.AnimeList;
+import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
 import com.einundneunzig.animesongstoyoutube.myanimelist.Node;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;

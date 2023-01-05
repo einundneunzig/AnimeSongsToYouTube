@@ -8,7 +8,6 @@ import androidx.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
 import com.einundneunzig.animesongstoyoutube.myanimelist.Node;
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelationType;
 import com.einundneunzig.animesongstoyoutube.myanimelist.Theme;
@@ -33,13 +33,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.api.services.youtube.YouTubeScopes;
 
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,11 +44,13 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount account;
     private PopupWindow popupWindow;
+    private Intent settingsIntent;
     private final int RC_SIGN_IN = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        settingsIntent = new Intent(this, SettingsActivity.class);
         Intent intent = getIntent();
 
         account = GoogleSignIn.getLastSignedInAccount(this);
@@ -87,7 +85,7 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivity(settingsIntent);
                 return true;
 
             default:

@@ -58,6 +58,7 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        android:key="youtube_settings"
         android:title="@string/youtube_settings">
 
         <Preference

@@ -1,18 +1,30 @@
 package com.einundneunzig.animesongstoyoutube;
 
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.api.services.youtube.model.Playlist;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.UUID;
 
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
@@ -21,14 +33,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public final static String spinOffsPreferenceKey = "spin_offs";
     public final static String allPreferenceKey = "all";
     public final static String othersPreferenceKey = "others";
-    public final static String playlistNamePreferenceKey = "add_to_playlist_name";
-    public final static String playlistIdPreferenceKey = "add_to_playlist_id";
     public final static String addToPlaylistPreferenceKey = "add_to_playlist";
+    public final static String addedPlaylistKey = "addedPlaylist";
+    public final static String youtubeSettingsCategoryKey = "youtube_settings";
 
     GoogleSignInAccount account;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
         setPreferencesFromResource(R.xml.settings_hierarchy_preferences, rootKey);
         account = GoogleSignIn.getLastSignedInAccount(getActivity().getApplicationContext());
 
@@ -48,9 +61,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference(addToPlaylistPreferenceKey).setOnPreferenceClickListener(this);
     }
 
-
     @Override
     public boolean onPreferenceClick(Preference preference) {
+
+        System.out.println("Test " + preference.getKey());
 
         switch(preference.getKey()){
             case logInPreferenceKey:
@@ -65,14 +79,31 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             case addToPlaylistPreferenceKey:
                 if(YoutubeManager.getAccount()!=null){
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(((ViewGroup)getView().getParent()).getId(), new AddToPlaylistFragment(), "calledFromSettingsFragment")
+                            .replace(((ViewGroup)getView().getParent()).getId(), new AddToPlaylistFragment())
                             .addToBackStack(null)
                             .commit();
                     return true;
                 }
+
             default:
                 break;
         }
+        if(preference.getKey().contains(addedPlaylistKey)){
+
+            new MaterialAlertDialogBuilder(getContext(), com.google.android.material.R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_Centered)
+                    .setTitle(getString(R.string.info))
+                    .setMessage(getString(R.string.removePlaylist))
+                    .setNegativeButton(getString(R.string.no), (dialog, which) -> {
+                    })
+                    .setPositiveButton(getString(R.string.yes), (dialog, which)->{
+                        getActivity().runOnUiThread(()->{
+                            ((PreferenceCategory)findPreference(youtubeSettingsCategoryKey)).removePreference(preference);
+                        });
+                    })
+                    .show();
+            return true;
+        }
+
         return false;
     }
 
@@ -97,60 +128,29 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
                     return false;
                 }
-                /*
-            case playlistNamePreferenceKey:
-                EditTextPreference playlistIdPreference = ((EditTextPreference)findPreference(playlistIdPreferenceKey));
-
-                    YoutubeManager.setAccount(account, getContext());
-                    Thread t = new Thread(()->{
-                        p[0] = YoutubeManager.findPlaylistByName((String) newValue);
-                        String playlistId = "";
-                        if(p[0] !=null){
-                            playlistId = p[0].getId();
-                        }else{
-                            System.out.println("p is null");
-                            //Toast.makeText(getContext(), getString(R.string.playlist_name_invalid), Toast.LENGTH_LONG).show();
-                            //return false;
-                        }
-                        String finalPlaylistId = playlistId;
-                        this.getActivity().runOnUiThread(()->{
-                            playlistIdPreference.setText(finalPlaylistId);
-                        });
-                    });
-                    t.start();
-
-                    return true;
-
-
-            case playlistIdPreferenceKey:
-
-                EditTextPreference playlistNamePreference = ((EditTextPreference)findPreference(playlistNamePreferenceKey));
-                if(playlistNamePreference.getText()== "") {
-                    String playlistName = "";
-
-                    p[0] = YoutubeManager.findPlaylistById((String) newValue);
-                    if (p[0] != null) {
-                        playlistName = p[0].getSnippet().getTitle();
-                    } else {
-                        Toast.makeText(getContext(), getString(R.string.playlist_id_invalid), Toast.LENGTH_LONG).show();
-                        return false;
-                    }
-
-                    ((EditTextPreference) findPreference(playlistNamePreferenceKey)).setText(playlistName);
-                    return true;
-                }else{
-                    return false;
-                }
-                */
             default:
                 return true;
         }
 
     }
 
+    public void addPlaylistToPreference(Playlist playlist){
+        Preference playlistPreference = new Preference(getContext());
+        String title = playlist.getSnippet().getTitle();
+        String summary = playlist.getId();
+        playlistPreference.setTitle(title);
+        playlistPreference.setSummary(summary);
+        playlistPreference.setKey(addedPlaylistKey);
+        playlistPreference.setOnPreferenceClickListener(this);
+
+        PreferenceCategory settingsCategory = findPreference(youtubeSettingsCategoryKey);
 
 
+        getActivity().runOnUiThread(()->{
+            settingsCategory.addPreference(playlistPreference);
+        });
 
 
+    }
 
 }

@@ -1,4 +1,5 @@
 package com.einundneunzig.animesongstoyoutube;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.api.services.youtube.model.Playlist;
@@ -22,11 +26,14 @@ import com.google.api.services.youtube.model.Playlist;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Set;
 
 
 public class AddToPlaylistFragment extends Fragment implements TextView.OnEditorActionListener, View.OnClickListener{
 
     private LinearLayout search_playlist_results;
+    public final static String addedPlaylistKey = "addedPlaylist";
+    public final static String youtubeSettingsCategoryKey = "youtube_settings";
 
     public AddToPlaylistFragment(){
         super(R.layout.add_to_playlist_layout);
@@ -35,9 +42,28 @@ public class AddToPlaylistFragment extends Fragment implements TextView.OnEditor
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        loadPlaylists();
         EditText textField = getActivity().findViewById(R.id.search_playlist);
         textField.setOnEditorActionListener(this);
         search_playlist_results = getActivity().findViewById(R.id.search_playlist_results);
+    }
+
+
+    private void loadPlaylists() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int i = 0;
+        String playlistTitle = sharedPreferences.getString("playlistTitle"+i, null);
+        while(playlistTitle!=null){
+            Preference preference = new Preference(getContext());
+            preference.setKey(addedPlaylistKey);
+            preference.setTitle(playlistTitle);
+            preference.setSummary(sharedPreferences.getString("playlistSummary"+i, null));
+            getActivity().runOnUiThread(()->{
+                ((PreferenceCategory)((SettingsFragment)getActivity().getSupportFragmentManager().findFragmentByTag("SettingsFragment")).findPreference(youtubeSettingsCategoryKey)).addPreference(preference);
+            });
+            i++;
+            playlistTitle = sharedPreferences.getString("playlistTitle"+i, null);
+        }
     }
 
     private void searchPlaylists(String search) {
@@ -70,7 +96,7 @@ public class AddToPlaylistFragment extends Fragment implements TextView.OnEditor
             nodeLayout.addView(image);
             nodeLayout.addView(text);
 
-            nodeLayout.setTag(p.getId());
+            nodeLayout.setTag(p);
             nodeLayout.setOnClickListener(this);
             getActivity().runOnUiThread(()->{
                 search_playlist_results.addView(nodeLayout);
@@ -111,7 +137,8 @@ public class AddToPlaylistFragment extends Fragment implements TextView.OnEditor
         if(view instanceof LinearLayout){
             LinearLayout playlistLayout = (LinearLayout) view;
             if(((LinearLayout) view).getOrientation() == LinearLayout.HORIZONTAL){
-                String playlistId = (String) playlistLayout.getTag();
+                Playlist playlist = (Playlist) playlistLayout.getTag();
+                ((SettingsFragment)getActivity().getSupportFragmentManager().findFragmentByTag("SettingsFragment")).addPlaylistToPreference(playlist);
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         }

@@ -50,5 +50,9 @@
     <string name="name_of_playlist">Playlist-Name</string>
     <string name="playlist_id_empty">Playlist-ID ist leer</string>
     <string name="not_logged_in">Du bist nicht angemeldet</string>
+    <string name="info">Info</string>
+    <string name="removePlaylist">Möchtest du diese Playlist entfernen?</string>
+    <string name="no">Nein</string>
+    <string name="yes">Ja</string>
 
 </resources>
