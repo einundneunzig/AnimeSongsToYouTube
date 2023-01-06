@@ -1,4 +1,4 @@
-package com.einundneunzig.animesongstoyoutube;
+package com.einundneunzig.animesongstoyoutube.animedetails.settings;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +20,8 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.einundneunzig.animesongstoyoutube.R;
+import com.einundneunzig.animesongstoyoutube.animedetails.settings.SettingsFragment;
 import com.einundneunzig.animesongstoyoutube.youtube.YoutubeManager;
 import com.google.api.services.youtube.model.Playlist;
 

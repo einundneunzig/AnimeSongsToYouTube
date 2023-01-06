@@ -1,4 +1,4 @@
-package com.einundneunzig.animesongstoyoutube;
+package com.einundneunzig.animesongstoyoutube.animedetails.settings;
 
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -8,6 +8,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.einundneunzig.animesongstoyoutube.R;
 import com.einundneunzig.animesongstoyoutube.youtube.YoutubeManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

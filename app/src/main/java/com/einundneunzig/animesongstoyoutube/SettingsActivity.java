@@ -1,13 +1,10 @@
 package com.einundneunzig.animesongstoyoutube;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.einundneunzig.animesongstoyoutube.animedetails.settings.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 

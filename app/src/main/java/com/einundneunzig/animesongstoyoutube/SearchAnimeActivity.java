@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.einundneunzig.animesongstoyoutube.animedetails.AnimeDetailsActivity;
 import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.AnimeList;
 import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
 import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Node;

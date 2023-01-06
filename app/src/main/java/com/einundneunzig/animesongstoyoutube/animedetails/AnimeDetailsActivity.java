@@ -1,4 +1,4 @@
-package com.einundneunzig.animesongstoyoutube;
+package com.einundneunzig.animesongstoyoutube.animedetails;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.einundneunzig.animesongstoyoutube.R;
+import com.einundneunzig.animesongstoyoutube.SettingsActivity;
 import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
 import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Node;
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelationType;

@@ -14,7 +14,7 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".AnimeDetailsActivity"
+            android:name=".animedetails.AnimeDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".SearchAnimeActivity"
