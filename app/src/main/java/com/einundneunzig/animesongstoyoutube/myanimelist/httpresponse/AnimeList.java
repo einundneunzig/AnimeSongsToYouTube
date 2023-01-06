@@ -1,4 +1,4 @@
-package com.einundneunzig.animesongstoyoutube.myanimelist;
+package com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

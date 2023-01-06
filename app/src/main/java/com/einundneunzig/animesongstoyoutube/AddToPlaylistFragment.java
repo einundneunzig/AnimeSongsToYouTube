@@ -15,18 +15,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.einundneunzig.animesongstoyoutube.youtube.YoutubeManager;
 import com.google.api.services.youtube.model.Playlist;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Set;
 
 
 public class AddToPlaylistFragment extends Fragment implements TextView.OnEditorActionListener, View.OnClickListener{

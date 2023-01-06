@@ -1,5 +1,6 @@
-package com.einundneunzig.animesongstoyoutube.myanimelist;
+package com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse;
 
+import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Node {

@@ -2,6 +2,9 @@ package com.einundneunzig.animesongstoyoutube.myanimelist;
 
 import android.util.Log;
 
+import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Node;
+import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.RelatedAnime;
+import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Theme;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 

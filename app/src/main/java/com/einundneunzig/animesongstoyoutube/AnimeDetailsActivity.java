@@ -21,9 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
-import com.einundneunzig.animesongstoyoutube.myanimelist.Node;
+import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Node;
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelationType;
-import com.einundneunzig.animesongstoyoutube.myanimelist.Theme;
+import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Theme;
+import com.einundneunzig.animesongstoyoutube.youtube.YoutubeManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
