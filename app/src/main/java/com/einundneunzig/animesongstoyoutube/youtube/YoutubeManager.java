@@ -32,6 +32,8 @@ public abstract class YoutubeManager {
     private static YouTube mService;
     private static GoogleSignInAccount signInAccount;
 
+    private static List<Playlist> usersPlaylists;
+
     public static void setAccount(@NonNull GoogleSignInAccount account, Context context){
 
         signInAccount = account;
@@ -75,44 +77,54 @@ public abstract class YoutubeManager {
 
     public static List<Playlist> findPlaylistsByName(String name){
 
-        final List<Playlist> playlistsWithSimilarName = new ArrayList<>();
+        if(usersPlaylists==null) loadUsersPlaylists();
+
+        List<Playlist> playlistsWithName = new ArrayList<>();
+
+        for (Playlist playlist : usersPlaylists) {
+            if (playlist.getSnippet().getTitle().toLowerCase().contains(name.toLowerCase())) {
+                playlistsWithName.add(playlist);
+            }
+        }
+
+        return playlistsWithName;
+    }
+
+    public static void loadUsersPlaylists(){
+
+        final List<Playlist> playlists = new ArrayList<>();
 
         final String[] pageToken = {" "};
 
-                while (pageToken[0] != null) {
+        while (pageToken[0] != null) {
 
-                    final PlaylistListResponse[] response = {null};
+            final PlaylistListResponse[] response = {null};
 
-                    Thread t = new Thread(()->{
-                        try {
-                             response[0] = mService.playlists().list("snippet")
-                                    .setMine(true)
-                                    .setPageToken(pageToken[0])
-                                    .execute();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    t.start();
-
-                    try {
-                        t.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (response[0].size() == 0) break;
-
-                    for (Playlist playlist : response[0].getItems()) {
-                        if (playlist.getSnippet().getTitle().toLowerCase().contains(name.toLowerCase())) {
-                            playlistsWithSimilarName.add(playlist);
-                        }
-                    }
-                     pageToken[0] = response[0].getNextPageToken();
+            Thread t = new Thread(()->{
+                try {
+                    response[0] = mService.playlists().list("snippet")
+                            .setMine(true)
+                            .setPageToken(pageToken[0])
+                            .execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            });
+            t.start();
 
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-        return playlistsWithSimilarName;
+            if (response[0].size() == 0) break;
+
+            playlists.addAll(response[0].getItems());
+
+            pageToken[0] = response[0].getNextPageToken();
+        }
+        usersPlaylists = playlists;
     }
 
     public static void addVideoToPlaylist(@NonNull String playlistId, @NonNull String videoId){

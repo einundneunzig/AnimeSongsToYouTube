@@ -3,6 +3,8 @@ package com.einundneunzig.animesongstoyoutube.animedetails;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
@@ -164,15 +166,16 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if(sharedPreferences.getBoolean("add_to_playlist", false)){
-            String addToPlaylistId = sharedPreferences.getString("add_to_playlist_id", "");
 
-            if(addToPlaylistId == ""){
-                runOnUiThread(()-> Toast.makeText(AnimeDetailsActivity.this, getString(R.string.playlist_id_empty), Toast.LENGTH_LONG).show());
-                return;
-            }
+        int i = 0;
+        String addToPlaylistId = sharedPreferences.getString("playlist_key" + i + "summary", null);
+
+        while (addToPlaylistId != null) {
             playlistIds.add(addToPlaylistId);
+
+            addToPlaylistId = sharedPreferences.getString("playlist_key" + ++i + "summary", null);
         }
+
 
         boolean sequels = sharedPreferences.getBoolean("sequels", false);
         boolean prequels = sharedPreferences.getBoolean("prequels", false);

@@ -1,4 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AnimeSongsToYouTube</string>
+    <!-- Preference Titles -->
+
+    <!-- Messages Preferences -->
+
+    <!-- Actions -->
+    <string name="abort">Abbrechen</string>
+    <string name="activate_nonetheless">Trotzdem aktivieren</string>
+
+
+    <!-- Warnings -->
+    <string name="warning">Warnung</string>
+    <string name="crossover_warning">Bei Crossover Episoden wird anderer Anime ebenfalls konvertiert.</string>
+
+    <!-- Sync Preferences -->
+    <string name="action_settings">Einstellungen</string>
+    <string name="myanimelist_settings">MyAnimeList Einstellungen</string>
+    <string name="include_sequels">Sequels konvertieren</string>
+    <string name="include_sequels_on">Sequels werden konvertiert</string>
+    <string name="include_sequels_off">Sequels werden nicht konvertiert</string>
+    <string name="include_prequels">Prequels konvertieren</string>
+    <string name="include_prequels_on">Prequels werden konvertiert</string>
+    <string name="include_prequels_off">Prequels werden nicht konvertiert</string>
+    <string name="include_others">Others konvertieren</string>
+    <string name="include_others_on">Others werden konvertiert</string>
+    <string name="include_others_off">Others werden nicht konvertiert</string>
+
+    <string name="include_side_stories">Side Stories konvertieren</string>
+    <string name="include_side_stories_on">Side Stories werden konvertiert</string>
+    <string name="include_side_stories_off">Side Stories werden nicht konvertiert</string>
+
+    <string name="include_spin_offs">Spin-Offs konvertieren</string>
+    <string name="include_spin_offs_on">Spin-Offs werden konvertiert</string>
+    <string name="include_spin_offs_off">Spin-Offs werden nicht konvertiert</string>
+
+    <string name="include_all">Alles konvertieren</string>
+    <string name="include_all_on">Alles wird konvertiert</string>
+    <string name="include_all_off">Es wird nicht alles konvertiert</string>
+
+    <string name="youtube_settings">YouTube Einstellungen</string>
+    <string name="create_new_playlist">Neue Playlist erstellen</string>
+    <string name="add_to_playlist">Zu Playlist hinzufügen</string>
+
+    <string name="log_in">Anmelden</string>
+    <string name="logged_in_summary">Zum Abmelden klicken</string>
+    <string name="logged_in_title">Angemeldet als</string>
+    <string name="privacy_status_title">Sichtbarkeit</string>
+    <string name="name_of_playlist">Playlist-Name</string>
+    <string name="playlist_id_empty">Playlist-ID ist leer</string>
+    <string name="not_logged_in">Du bist nicht angemeldet</string>
+    <string name="info">Info</string>
+    <string name="removePlaylistInfo">Möchtest du diese Playlist entfernen?</string>
+    <string name="no">Nein</string>
+    <string name="yes">Ja</string>
+
 </resources>
