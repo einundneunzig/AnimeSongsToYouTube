@@ -1,9 +1,9 @@
 package com.einundneunzig.animesongstoyoutube.youtube;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -24,7 +24,7 @@ import com.google.api.services.youtube.model.SearchResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class YoutubeManager {
@@ -38,7 +38,7 @@ public abstract class YoutubeManager {
 
         signInAccount = account;
 
-        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(YouTubeScopes.YOUTUBE_FORCE_SSL));
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, Collections.singletonList(YouTubeScopes.YOUTUBE_FORCE_SSL));
         credential.setSelectedAccount(account.getAccount());
 
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -54,27 +54,10 @@ public abstract class YoutubeManager {
         return signInAccount;
     }
 
-    public static Playlist findPlaylistById(@NonNull String id){
-        final PlaylistListResponse[] response = {null};
-        Thread t = new Thread(()->{
-            try {
-            response[0] = mService.playlists().list("snippet").setId(id)
-                        .setMaxResults(1L)
-                        .setMine(true)
-                        .execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return response[0].getItems().get(0);
+    public static void removeAccount(){
+        signInAccount = null;
+        mService = null;
     }
-
     public static List<Playlist> findPlaylistsByName(String name){
 
         if(usersPlaylists==null) loadUsersPlaylists();
@@ -91,6 +74,8 @@ public abstract class YoutubeManager {
     }
 
     public static void loadUsersPlaylists(){
+
+        if(!checkMService()) return;
 
         final List<Playlist> playlists = new ArrayList<>();
 
@@ -129,6 +114,8 @@ public abstract class YoutubeManager {
 
     public static void addVideoToPlaylist(@NonNull String playlistId, @NonNull String videoId){
 
+        if(!checkMService()) return;
+
         PlaylistItem item = new PlaylistItem();
         PlaylistItemSnippet snippet = new PlaylistItemSnippet();
         snippet.setPlaylistId(playlistId);
@@ -151,9 +138,8 @@ public abstract class YoutubeManager {
     }
     public static String createPlaylist(String title, String privacyStatus) throws IOException {
 
-        if(mService == null){
-            throw new IOException("YouTube is not accessible. Were the Account set?");
-        }
+        if(!checkMService()) return "";
+
         Playlist playlist = new Playlist();
         PlaylistStatus status = new PlaylistStatus();
         status.setPrivacyStatus(privacyStatus);
@@ -164,14 +150,11 @@ public abstract class YoutubeManager {
         playlist.setSnippet(playlistSnippet);
 
         Playlist[] response = {null};
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    response[0] = mService.playlists().insert("snippet,status", playlist).execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Thread t = new Thread(() -> {
+            try {
+                response[0] = mService.playlists().insert("snippet,status", playlist).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
         t.start();
@@ -184,6 +167,9 @@ public abstract class YoutubeManager {
     }
 
     public static String searchYouTubeForSong(String title, String singer){
+
+        if(!checkMService()) return "";
+
         final SearchResult[] searchResult = new SearchResult[1];
 
 
@@ -194,7 +180,7 @@ public abstract class YoutubeManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(searchListResponse != null || searchListResponse.getItems().size() != 0){
+            if(searchListResponse != null && searchListResponse.getItems().size() != 0){
                 searchResult[0] = searchListResponse.getItems().get(0);
             }
         });
@@ -210,4 +196,14 @@ public abstract class YoutubeManager {
         }
         return searchResult[0].getId().getVideoId();
     }
+
+    private static boolean checkMService() {
+        if(mService == null){
+            Log.w("997", "YouTube is not accessible. Were the Account set?");
+            return false;
+        }
+        return true;
+    }
+
+
 }

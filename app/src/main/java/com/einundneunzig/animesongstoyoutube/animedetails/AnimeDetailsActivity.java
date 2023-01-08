@@ -46,20 +46,14 @@ import java.util.Set;
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Node node;
-    private GoogleSignInClient mGoogleSignInClient;
-    private GoogleSignInAccount account;
     private PopupWindow popupWindow;
     private Intent settingsIntent;
-    private final int RC_SIGN_IN = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settingsIntent = new Intent(this, SettingsActivity.class);
         Intent intent = getIntent();
-
-        account = GoogleSignIn.getLastSignedInAccount(this);
-        YoutubeManager.setAccount(account, this);
 
         node = MyAnimeListManager.getAnimeDetails(intent.getIntExtra("animeId", -1));
 
@@ -72,13 +66,6 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
 
         findViewById(R.id.convertButton).setOnClickListener(this);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestProfile()
-                .requestScopes(new Scope(YouTubeScopes.YOUTUBE_FORCE_SSL))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     @Override
@@ -105,10 +92,10 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.convertButton:
-                if (account == null) {
+                if (YoutubeManager.getAccount() == null) {
                     Toast.makeText(getApplicationContext(), getString(R.string.not_logged_in), Toast.LENGTH_LONG).show();
                 }else{
-                    showConfirmPopup(account);
+                    showConfirmPopup(YoutubeManager.getAccount());
                 }
                 break;
 
@@ -125,8 +112,7 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.buttonNo:
                 popupWindow.dismiss();
-                mGoogleSignInClient.signOut();
-                account = null;
+                YoutubeManager.removeAccount();
                 Toast.makeText(getApplicationContext(), "Erfolgreich ausgeloggt", Toast.LENGTH_LONG).show();
                 break;
             default:
@@ -143,20 +129,6 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         popupView.findViewById(R.id.buttonYes).setOnClickListener(this);
         popupView.findViewById(R.id.buttonNo).setOnClickListener(this);
 
-    }
-
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivity(signInIntent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            account = task.getResult();
-        }
     }
 
     private void saveThemesToPlaylist() {

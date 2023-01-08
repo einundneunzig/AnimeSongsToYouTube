@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void run() {
 
                         try {
-                            Bitmap bitmap = (BitmapFactory.decodeStream(new URL(account.getPhotoUrl().toString()).openStream()));
+                            Bitmap bitmap = BitmapFactory.decodeStream(new URL(account.getPhotoUrl().toString()).openStream());
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

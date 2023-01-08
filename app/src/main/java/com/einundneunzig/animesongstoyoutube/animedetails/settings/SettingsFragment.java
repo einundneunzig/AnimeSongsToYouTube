@@ -1,10 +1,16 @@
 package com.einundneunzig.animesongstoyoutube.animedetails.settings;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -14,12 +20,19 @@ import com.einundneunzig.animesongstoyoutube.R;
 import com.einundneunzig.animesongstoyoutube.youtube.YoutubeManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.api.client.googleapis.GoogleUtils;
+import com.google.api.services.youtube.YouTubeScopes;
 import com.google.api.services.youtube.model.Playlist;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.net.URL;
 
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
@@ -35,14 +48,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public final static String addToPlaylistPreferenceKey = "add_to_playlist";
     public final static String youtubeSettingsCategoryKey = "youtube_settings";
 
-    GoogleSignInAccount account;
+    private GoogleSignInClient mGoogleSignInClient;
+
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
         setPreferencesFromResource(R.xml.settings_hierarchy_preferences, rootKey);
-        account = GoogleSignIn.getLastSignedInAccount(getActivity().getApplicationContext());
 
+        initGoogle();
+        updateUI(GoogleSignIn.getLastSignedInAccount(getActivity().getApplicationContext()));
 
         findPreference(spinOffsPreferenceKey).setOnPreferenceChangeListener(this);
         findPreference(othersPreferenceKey).setOnPreferenceChangeListener(this);
@@ -51,15 +67,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Preference log_in_preference = findPreference(logInPreferenceKey);
         log_in_preference.setOnPreferenceClickListener(this);
 
-        if(account!=null){
-            log_in_preference.setTitle(getString(R.string.logged_in_title) + " " +account.getDisplayName());
-            log_in_preference.setSummary(getString(R.string.logged_in_summary));
-        }
-
         findPreference(addToPlaylistPreferenceKey).setOnPreferenceClickListener(this);
 
         getSavedPlaylists();
 
+    }
+
+    private void initGoogle() {
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestProfile()
+                .requestScopes(new Scope(YouTubeScopes.YOUTUBE_FORCE_SSL))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
     }
 
     private void getSavedPlaylists() {
@@ -140,11 +162,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         switch(preference.getKey()){
             case logInPreferenceKey:
                 if(preference.getTitle().equals("Anmelden")){
-                    preference.setTitle(getString(R.string.logged_in_title) + " " +  "Test");
-                    preference.setSummary(getString(R.string.logged_in_summary));
+                    signIn();
                 }else{
-                    preference.setTitle(getString(R.string.log_in));
-                    preference.setSummary("");
+                    signOut();
                 }
                 return true;
             case addToPlaylistPreferenceKey:
@@ -223,12 +243,78 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         playlistPreference.setKey(playlistKey + playlistIndex);
         playlistPreference.setOnPreferenceClickListener(this);
 
-        System.out.println("PlaylistIndex " + playlistIndex);
         getActivity().runOnUiThread(()->{
             settingsCategory.addPreference(playlistPreference);
         });
 
+    }
 
+
+    private void signIn() {
+
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN, null);
+    }
+
+    private void signOut(){
+        mGoogleSignInClient.signOut();
+        Toast.makeText(getContext(), "Erfolgreich ausgeloggt", Toast.LENGTH_LONG).show();
+        updateUI(null);
+    }
+
+    private void updateUI(GoogleSignInAccount account) {
+        Preference preference = findPreference(logInPreferenceKey);
+
+        if(preference == null){
+            Log.w("998", logInPreferenceKey + " does not exist. Therefore can not update log in information");
+            return;
+        }
+
+        if(account!=null){
+            YoutubeManager.setAccount(account, getContext());
+            new Thread(()->{
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(new URL(account.getPhotoUrl().toString()).openStream());
+                    getActivity().runOnUiThread(()->{
+                        preference.setIcon(new BitmapDrawable(getResources(), bitmap));
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
+            preference.setTitle(getString(R.string.logged_in_title) + " " +  account.getDisplayName());
+            preference.setSummary(getString(R.string.logged_in_summary));
+        }else{
+            YoutubeManager.removeAccount();
+            preference.setIcon(null);
+            preference.setTitle(getString(R.string.log_in));
+            preference.setSummary("");
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            // Signed in successfully, show authenticated UI.
+            updateUI(account);
+
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("999", "signInResult:failed code=" + e.getStatusCode());
+            updateUI(null);
+        }
     }
 
 }
