@@ -200,6 +200,10 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
 
         }
 
+        if(playlistIds.size()<=0){
+            runOnUiThread(()-> Toast.makeText(AnimeDetailsActivity.this, getString(R.string.no_playlists), Toast.LENGTH_LONG).show());
+            return;
+        }
         progressBar.setMax(themes.size()*playlistIds.size());
         progressBar.setIndeterminate(false);
         progressBar.setProgress(1);

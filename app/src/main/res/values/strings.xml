@@ -54,5 +54,6 @@
     <string name="removePlaylistInfo">Möchtest du diese Playlist entfernen?</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
+    <string name="no_playlists">Keine Playlists zum hinzufügen ausgewählt.</string>
 
 </resources>
