@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.einundneunzig.animesongstoyoutube.ConvertFragment;
 import com.einundneunzig.animesongstoyoutube.R;
 import com.einundneunzig.animesongstoyoutube.animedetails.settings.SettingsActivity;
 import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
@@ -26,7 +27,9 @@ import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Node;
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelationType;
 import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Theme;
 import com.einundneunzig.animesongstoyoutube.youtube.YoutubeManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.api.services.youtube.model.SearchResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +46,9 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        YoutubeManager.setAccount(GoogleSignIn.getLastSignedInAccount(this), this);
+
         settingsIntent = new Intent(this, SettingsActivity.class);
         Intent intent = getIntent();
 
@@ -199,13 +205,36 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         progressBar.setIndeterminate(false);
         progressBar.setProgress(1);
 
+        ArrayList<String> animeSongTitles = new ArrayList<>();
+        ArrayList<String> animeSongSingers = new ArrayList<>();
+        ArrayList<String> youtubeVideoTitles = new ArrayList<>();
+        ArrayList<String> youtubeVideoChannels = new ArrayList<>();
+
         for(Theme theme: themes) {
-            String videoId = YoutubeManager.searchYouTubeForSong(theme.getLatinTitle(), theme.getSinger());
-            for(String playlistId: playlistIds){
-                YoutubeManager.addVideoToPlaylist(playlistId, videoId);
-                progressBar.setProgress(progressBar.getProgress()+1);
-            }
+            animeSongTitles.add(theme.getCompleteTitle());
+            animeSongSingers.add(theme.getSinger());
+
+            SearchResult searchResult = YoutubeManager.searchYouTubeForSong(theme.getLatinTitle(), theme.getSinger());
+            youtubeVideoTitles.add(searchResult.getSnippet().getTitle());
+            youtubeVideoChannels.add(searchResult.getSnippet().getChannelTitle());
+
         }
+
+        ConvertFragment convertFragment = new ConvertFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("animeSongTitles", animeSongTitles);
+        bundle.putStringArrayList("animeSongSingers", animeSongSingers);
+        bundle.putStringArrayList("youtubeVideoTitles", youtubeVideoTitles);
+        bundle.putStringArrayList("youtubeVideoChannels", youtubeVideoChannels);
+
+        convertFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragment_container_view, convertFragment, "ConvertFragment")
+                .addToBackStack("ConvertFragment")
+                .commit();
 
         runOnUiThread(()-> Toast.makeText(AnimeDetailsActivity.this, "All Songs added.", Toast.LENGTH_LONG).show());
     }

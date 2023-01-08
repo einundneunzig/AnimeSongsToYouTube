@@ -7,6 +7,26 @@
     tools:context=".animedetails.AnimeDetailsActivity">
 
 
+    <Button
+        android:id="@+id/convertButton"
+        android:layout_width="183dp"
+        android:layout_height="59dp"
+        android:text="Save Themes to Youtube Playlist"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/animeTitleView" />
+
+
+    <CheckBox
+        android:id="@+id/checkBoxAllSongs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="123dp"
+        android:layout_marginBottom="142dp"
+        android:text="Alle Songs von verwandten Anime"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <ImageView
         android:id="@+id/animeImageView"
         android:layout_width="180dp"
@@ -33,28 +53,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/animeImageView" />
 
-    <Button
-        android:id="@+id/convertButton"
-        android:layout_width="183dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="104dp"
-        android:text="Save Themes to Youtube Playlist"
-        android:textSize="12sp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animeTitleView" />
-
-    <CheckBox
-        android:id="@+id/checkBoxAllSongs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="123dp"
-        android:layout_marginBottom="142dp"
-        android:text="Alle Songs von verwandten Anime"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -66,6 +64,11 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/animeTitleView" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

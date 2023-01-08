@@ -166,9 +166,9 @@ public abstract class YoutubeManager {
         return response[0].getId();
     }
 
-    public static String searchYouTubeForSong(String title, String singer){
+    public static SearchResult searchYouTubeForSong(String title, String singer){
 
-        if(!checkMService()) return "";
+        if(!checkMService()) return null;
 
         final SearchResult[] searchResult = new SearchResult[1];
 
@@ -194,7 +194,7 @@ public abstract class YoutubeManager {
         if(searchResult[0]==null) {
             return searchYouTubeForSong(title, "");
         }
-        return searchResult[0].getId().getVideoId();
+        return searchResult[0];
     }
 
     private static boolean checkMService() {

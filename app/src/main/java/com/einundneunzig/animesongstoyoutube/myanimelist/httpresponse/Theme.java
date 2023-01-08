@@ -1,17 +1,19 @@
 package com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse;
 
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Theme {
+public class Theme{
     private int id;
     private int animeId;
     private String text;
 
-    public Theme(int id, int animeId, String text) {
+    public Theme(int id, int animeId, String text){
         this.id = id;
         this.animeId = animeId;
         this.text = text;
@@ -34,7 +36,7 @@ public class Theme {
     }
 
     public String getCompleteTitle(){
-        return text.substring(0, text.indexOf("by")).trim();
+        return text.substring(0, text.indexOf("by")).trim().replace("\"", "");
     }
     public String getSinger(){
         String t = getLatinText();
