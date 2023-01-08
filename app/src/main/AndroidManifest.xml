@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AnimeSongsToYouTube">
         <activity
-            android:name=".SettingsActivity"
+            android:name=".animedetails.settings.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".animedetails.AnimeDetailsActivity"

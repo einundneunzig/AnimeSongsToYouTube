@@ -1,9 +1,10 @@
-package com.einundneunzig.animesongstoyoutube;
+package com.einundneunzig.animesongstoyoutube.animedetails.settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.einundneunzig.animesongstoyoutube.R;
 import com.einundneunzig.animesongstoyoutube.animedetails.settings.SettingsFragment;
 
 public class SettingsActivity extends AppCompatActivity {

@@ -3,6 +3,8 @@ package com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Theme {
     private int id;
@@ -18,19 +20,32 @@ public class Theme {
     public Theme() {
     }
 
-    public String getTitle(){
-        String t = getFormattedText();
+    public String getLatinTitle(){
+        String t = getLatinText();
         return t.substring(0, t.indexOf("by")).trim();
     }
 
+    public String getJapaneseTitle(){
+        Matcher matcher = Pattern.compile("\\(\\\\u[0-9A-Fa-f]{4}\\)").matcher(text);
+        if(matcher.find()){
+            return matcher.group();
+        }
+        return "";
+    }
+
+    public String getCompleteTitle(){
+        return text.substring(0, text.indexOf("by")).trim();
+    }
     public String getSinger(){
-        String t = getFormattedText();
+        String t = getLatinText();
         return t.substring(t.indexOf("by")+3).trim();
     }
 
-    public String getFormattedText(){
-        return text.replace("\"", "").replaceAll("\\(eps.*?\\)", "").replace("  ", " ").trim();
+    public String getLatinText(){
+        return text.replace("\"", "").replaceAll(" \\s*\\(.*?\\)", "");
     }
+
+
     public int getId() {
         return id;
     }

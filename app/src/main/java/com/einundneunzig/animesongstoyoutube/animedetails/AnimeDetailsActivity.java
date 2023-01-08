@@ -1,10 +1,7 @@
 package com.einundneunzig.animesongstoyoutube.animedetails;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
@@ -23,19 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.einundneunzig.animesongstoyoutube.R;
-import com.einundneunzig.animesongstoyoutube.SettingsActivity;
+import com.einundneunzig.animesongstoyoutube.animedetails.settings.SettingsActivity;
 import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
 import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Node;
 import com.einundneunzig.animesongstoyoutube.myanimelist.RelationType;
 import com.einundneunzig.animesongstoyoutube.myanimelist.httpresponse.Theme;
 import com.einundneunzig.animesongstoyoutube.youtube.YoutubeManager;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.tasks.Task;
-import com.google.api.services.youtube.YouTubeScopes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -209,7 +200,7 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         progressBar.setProgress(1);
 
         for(Theme theme: themes) {
-            String videoId = YoutubeManager.searchYouTubeForSong(theme.getTitle(), theme.getSinger());
+            String videoId = YoutubeManager.searchYouTubeForSong(theme.getLatinTitle(), theme.getSinger());
             for(String playlistId: playlistIds){
                 YoutubeManager.addVideoToPlaylist(playlistId, videoId);
                 progressBar.setProgress(progressBar.getProgress()+1);
