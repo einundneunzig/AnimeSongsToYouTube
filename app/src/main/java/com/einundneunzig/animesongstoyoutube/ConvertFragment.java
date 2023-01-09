@@ -34,7 +34,10 @@ public class ConvertFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_convert_layout, container, false);
 
         tableLayout = rootView.findViewById(R.id.convert_table_layout);
-
+        for(int i = 0; i<10; i++){
+            addRow("t" , "t", "t", "t");
+        }
+/*
         ArrayList<String> animeSongTitles = getArguments().getStringArrayList("animeSongTitles");
         ArrayList<String> animeSongSingers = getArguments().getStringArrayList("animeSongSingers");
         ArrayList<String> youtubeVideoTitles = getArguments().getStringArrayList("youtubeVideoTitles");
@@ -45,7 +48,7 @@ public class ConvertFragment extends Fragment {
             addRow("t" , "t", "t", "t");
             addRow("t" , "t", "t", "t");
         }
-
+*/
         return rootView;
     }
 

@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,7 +48,10 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        YoutubeManager.setAccount(GoogleSignIn.getLastSignedInAccount(this), this);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null){
+            YoutubeManager.setAccount(account, this);
+        }
 
         settingsIntent = new Intent(this, SettingsActivity.class);
         Intent intent = getIntent();
@@ -62,6 +66,13 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         animeTitle.setText(node.getTitle());
 
         findViewById(R.id.convertButton).setOnClickListener(this);
+
+
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragment_container_view, new ConvertFragment(), "ConvertFragment")
+                .addToBackStack("ConvertFragment")
+                .commit();
 
     }
 
