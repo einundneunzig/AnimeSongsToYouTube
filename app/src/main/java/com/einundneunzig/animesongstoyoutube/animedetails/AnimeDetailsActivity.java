@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.einundneunzig.animesongstoyoutube.ConvertFragment;
+import com.einundneunzig.animesongstoyoutube.ConvertActivity;
 import com.einundneunzig.animesongstoyoutube.R;
 import com.einundneunzig.animesongstoyoutube.animedetails.settings.SettingsActivity;
 import com.einundneunzig.animesongstoyoutube.myanimelist.MyAnimeListManager;
@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class AnimeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,6 +47,8 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_anime_details);
+
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null){
             YoutubeManager.setAccount(account, this);
@@ -58,7 +59,6 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
 
         node = MyAnimeListManager.getAnimeDetails(intent.getIntExtra("animeId", -1));
 
-        setContentView(R.layout.activity_anime_details);
         ImageView animeImage = findViewById(R.id.animeImageView);
         TextView animeTitle = findViewById(R.id.animeTitleView);
 
@@ -66,13 +66,6 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
         animeTitle.setText(node.getTitle());
 
         findViewById(R.id.convertButton).setOnClickListener(this);
-
-
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.fragment_container_view, new ConvertFragment(), "ConvertFragment")
-                .addToBackStack("ConvertFragment")
-                .commit();
 
     }
 
@@ -212,9 +205,6 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
             runOnUiThread(()-> Toast.makeText(AnimeDetailsActivity.this, getString(R.string.no_playlists), Toast.LENGTH_LONG).show());
             return;
         }
-        progressBar.setMax(themes.size()*playlistIds.size());
-        progressBar.setIndeterminate(false);
-        progressBar.setProgress(1);
 
         ArrayList<String> animeSongTitles = new ArrayList<>();
         ArrayList<String> animeSongSingers = new ArrayList<>();
@@ -231,22 +221,15 @@ public class AnimeDetailsActivity extends AppCompatActivity implements View.OnCl
 
         }
 
-        ConvertFragment convertFragment = new ConvertFragment();
-
+        Intent convertIntent = new Intent(this, ConvertActivity.class);
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("animeSongTitles", animeSongTitles);
         bundle.putStringArrayList("animeSongSingers", animeSongSingers);
         bundle.putStringArrayList("youtubeVideoTitles", youtubeVideoTitles);
         bundle.putStringArrayList("youtubeVideoChannels", youtubeVideoChannels);
 
-        convertFragment.setArguments(bundle);
+        convertIntent.putExtras(bundle);
 
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.fragment_container_view, convertFragment, "ConvertFragment")
-                .addToBackStack("ConvertFragment")
-                .commit();
-
-        runOnUiThread(()-> Toast.makeText(AnimeDetailsActivity.this, "All Songs added.", Toast.LENGTH_LONG).show());
+        startActivity(convertIntent);
     }
 }
